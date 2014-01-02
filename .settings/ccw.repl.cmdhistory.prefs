@@ -1,0 +1,2 @@
+cmdhistory=["(while (pos? @a) (do (println @a) (swap\! a dec)))" "(test)" "(print test)" "(println \\"test\\")" "(println \\"Some available input keys\\")" "clear-agent-errors"]
+eclipse.preferences.version=1
