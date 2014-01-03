@@ -1,2 +1,2 @@
-cmdhistory=["(while (pos? @a) (do (println @a) (swap\! a dec)))" "(test)" "(print test)" "(println \\"test\\")" "(println \\"Some available input keys\\")" "clear-agent-errors" "(find-ns Sorter.gui)" "(find-ns gui)"]
+cmdhistory=["(while (pos? @a) (do (println @a) (swap\! a dec)))" "(test)" "(print test)" "(println \\"test\\")" "(println \\"Some available input keys\\")" "clear-agent-errors" "(find-ns Sorter.gui)" "(find-ns gui)" "cln" "(def eager (doseq [x [1 2 3]] (println 'eager x)))"]
 eclipse.preferences.version=1
