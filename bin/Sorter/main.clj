@@ -1,8 +1,7 @@
 (ns Sorter.main)
-(ns Sorter.gui)
-(ns Sorter.messanges)
+(use 'Sorter.gui)
+(use 'Sorter.messanges)
 
-(load "gui")
 
 
 
@@ -13,7 +12,6 @@
           acc
           (recur (dec cnt) (* acc cnt))))))
 
-
 (defn main [n]
   (if (= n "go")
     (println "i do wat i want! Exit!")
@@ -21,7 +19,10 @@
     ( (mStartscreen)
 		  (let [userInput (clojure.string/lower-case(read-line))]
 	    (case userInput
-		       "help" ((mHelp)(main ""))
+		       "help" (
+                  (mHelp)
+                  (main "")
+                  )
 		       "go" (main userInput)
 		       "exit" (print userInput)
 		       "gui" (celsius)

@@ -1,2 +1,2 @@
-cmdhistory=["(while (pos? @a) (do (println @a) (swap\! a dec)))" "(test)" "(print test)" "(println \\"test\\")" "(println \\"Some available input keys\\")" "clear-agent-errors"]
+cmdhistory=["(while (pos? @a) (do (println @a) (swap\! a dec)))" "(test)" "(print test)" "(println \\"test\\")" "(println \\"Some available input keys\\")" "clear-agent-errors" "(find-ns Sorter.gui)" "(find-ns gui)"]
 eclipse.preferences.version=1
