@@ -1,4 +1,4 @@
-(ns Sorter.main)
+(ns Sorter.main (:gen-class))
 (use 'Sorter.gui)
 (use 'Sorter.messanges)
 
@@ -28,5 +28,4 @@
 		       "Exit with Error : No match found!" ))
   )))
 
-
-(main "")
+(compile 'Sorter.main)

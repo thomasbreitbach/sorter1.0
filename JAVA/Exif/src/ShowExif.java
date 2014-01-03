@@ -42,7 +42,7 @@ public class ShowExif {
 			    	if(tagName.equals(MODEL))			{	hmCameraInformation.put(MODEL, tag.getDescription()); }
 			    	if(tagName.equals(DATE))			{	hmCameraInformation.put(DATE, tag.getDescription()); }
 			    	
-			    	//System.out.println(tag);
+//			    	System.out.println(tag);
 			    }
 			}
 		} 
