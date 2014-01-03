@@ -3,8 +3,6 @@
 (use 'Sorter.messanges)
 
 
-
-
 (def factorial
   (fn [n]
     (loop [cnt n acc 1]

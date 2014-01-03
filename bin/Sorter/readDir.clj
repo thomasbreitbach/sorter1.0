@@ -1,5 +1,10 @@
 (ns Sorter.readDir)
 
-(def rawFormats (list ".CR2" ".NEF" ".RAW" ".DNG"))
+(def rawFormats (vector ".CR2" ".NEF" ".RAW" ".DNG"))
 
-(next rawFormats)
+(get rawFormats 0)
+(get rawFormats 1)
+(get rawFormats 2)
+(get rawFormats 3)
+
+(.lastIndexOf rawFormats)
