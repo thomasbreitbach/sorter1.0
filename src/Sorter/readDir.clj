@@ -27,10 +27,9 @@
 (defn list-images [dir formats]
   "gitb einen vector mit bildern zurück, die den gegebenen Dateiendungen entsprechen"
   (map (fn [p]
-       (filterv (fn [s]
-                  (.endsWith s p))
+       (filter (check-extension p)
                 (files-of-as-string dir)))
-       formats))
+        formats))
 
 ;(get rawFormats 0)
 ;(get rawFormats 1)
