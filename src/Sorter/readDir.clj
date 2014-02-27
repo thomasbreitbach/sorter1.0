@@ -25,8 +25,13 @@
   (count (list-files-as-file-seq dir)))
 
   
-;list images in given directory
-(defn list-images 
+;list images (incl.  in given directory
+(defn list-images-with-path 
+  "gitb einen vector mit bildern zurück, die den gegebenen Dateiendungen entsprechen"
+  [dir]
+  (filter #(re-find img-regex  %) (list-file-names-with-path dir)))
+
+(defn list-images
   "gitb einen vector mit bildern zurück, die den gegebenen Dateiendungen entsprechen"
   [dir]
   (filter #(re-find img-regex  %) (list-file-names dir)))
@@ -35,6 +40,11 @@
 (defn list-file-names
   [dir]
   (map #(.getName %) (list-files-as-file-seq dir))
+  )
+
+(defn list-file-names-with-path
+  [dir]
+  (map #(.getAbsolutePath %) (list-files-as-file-seq dir))
   )
 
 
