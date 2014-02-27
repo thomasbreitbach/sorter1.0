@@ -1,6 +1,9 @@
 (ns Sorter.readDir
+  ^{:doc "what is this ns about? todo: insert description"
+    :author "Thomas Breitbach & André Wißner"}
   (:use [clojure.string :only [join]])
-  )
+  (:import java.io.File)
+  (:require [clojure.java.io :as io]))
 
 ;raw and image formats
 (def rawFormats ["CR2" "NEF" "RAW" "DNG"])
@@ -14,16 +17,15 @@
 
 (defn list-files-as-file-seq [dir]
   "Lists all files in the given path incl. this folder (./)"
-    (file-seq (clojure.java.io/file dir)))
+    (file-seq (io/file dir)))
 
 ;(defn files-of-as-string [dir]
 ;  "List all filenames in the given path as string array exl. this folder (./)"
-;  (.list (clojure.java.io/file dir)))
+;  (.list (io/file dir)))
 
 (defn count-files [dir]
   "counts files of the given directory."
   (count (list-files-as-file-seq dir)))
-
   
 ;list images (incl.  in given directory
 (defn list-images-with-path 
@@ -42,12 +44,17 @@
   [dir]
   (map #(.getName %) (list-files-as-file-seq dir)))
 
-
 (defn list-filenames-with-path
   "gibt eine Liste aller Dateinamen (+ absoluter Pfad zur Datei) im gegebenen Ordner zurück"
   [dir]
   (map #(.getAbsolutePath %) (list-files-as-file-seq dir))
   )
+
+(defn rename-file
+  "Rename old-path to new-path."
+  [old-path new-path]
+  (.renameTo (io/as-file old-path) (io/as-file new-path)))
+
 
 ;###########################################
 ;##############UNKNOWN STUFF################
