@@ -6,9 +6,9 @@
 (def rawFormats ["CR2" "NEF" "RAW" "DNG"])
 (def imgFormats (conj rawFormats "jpg"))
 
-;case insesitive regex pattern to retrieve only images
+;case insensitive regex pattern to retrieve only images
 (def img-regex
-  "case insesitive regex pattern to retrieve only images"
+  "case insensitive regex pattern to retrieve only images"
   (re-pattern (str ".+\\.(?i:(" (join "|"
                                  imgFormats) "))")))
 
