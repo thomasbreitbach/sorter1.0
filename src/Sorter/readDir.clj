@@ -7,7 +7,7 @@
 (def rawFormats ["CR2" "NEF" "RAW" "DNG"])
 (def imgFormats (conj rawFormats "jpg"))
 
-;case insesitiv
+;case insesitiv regex pattern to retrieve only images
 (def img-regex
   (re-pattern (str ".+\\.(?i:(" (join "|"
                                  imgFormats) "))")))
@@ -23,12 +23,6 @@
 (defn count-files-of [dir]
   "counts files of the given directory."
   (count (list-files-as-file-seq dir)))
-
-;(defn check-extension
-;  "check-extention takes a prefix and returns a predicate 
-;  that checks a string if it ends with this"
-;  [p]
-;  (fn [s] (.endsWith s p)))
 
   
 ;list images in given directory
