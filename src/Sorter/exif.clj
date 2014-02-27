@@ -28,6 +28,9 @@
   (into {} (map #(hash-map (.getTagName %) (.getDescription %)) tag)))
 
 ; #(...) Kurzform zum Erzeugen einfacher anonymer Funktionen
+;
+;filter wendet alle Elemente der Collectiona auf die Funktion an und gibt die mit
+;rückgabe "true" zurück
 (defn exif-for-file
   "Takes an image file (as a java.io.InputStream or java.io.File) and extracts exif information into a map"
   [file]

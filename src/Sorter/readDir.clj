@@ -1,35 +1,48 @@
-(ns Sorter.readDir)
+(ns Sorter.readDir
+  (:use [clojure.string :only [join]])
+  )
 ;;For NOT nil eq !=
 (def not-nil? (complement nil?))
 
-(def rawFormats [".CR2" ".NEF" ".RAW" ".DNG"])
-(def imgFormats (conj rawFormats ".jpg" ".JPG"))
+(def rawFormats ["CR2" "NEF" "RAW" "DNG"])
+(def imgFormats (conj rawFormats "jpg"))
 
+;case insesitiv
+(def img-regex
+  (re-pattern (str ".+\\.(?i:(" (join "|"
+                                 imgFormats) "))")))
 
-(defn files-of-as-file [dir]
+(defn list-files-as-file-seq [dir]
   "Lists all files in the given path incl. this folder (./)"
     (file-seq (clojure.java.io/file dir)))
 
-(defn files-of-as-string [dir]
-  "List all filenames in the given path as string array exl. this folder (./)"
-  (.list (clojure.java.io/file dir)))
+;(defn files-of-as-string [dir]
+;  "List all filenames in the given path as string array exl. this folder (./)"
+;  (.list (clojure.java.io/file dir)))
 
 (defn count-files-of [dir]
   "counts files of the given directory."
-  (count (files-of-as-string dir)))
+  (count (list-files-as-file-seq dir)))
 
-(defn check-extension
-  "check-extention takes a prefix and returns a predicate 
-  that checks a string if it ends with this"
-  [p]
-  (fn [s] (.endsWith s p)))
+;(defn check-extension
+;  "check-extention takes a prefix and returns a predicate 
+;  that checks a string if it ends with this"
+;  [p]
+;  (fn [s] (.endsWith s p)))
+
   
-(defn list-images [dir formats]
+;list images in given directory
+(defn list-images 
   "gitb einen vector mit bildern zurück, die den gegebenen Dateiendungen entsprechen"
-  (map (fn [p]
-       (filter (check-extension p)
-                (files-of-as-string dir)))
-        formats))
+  [dir]
+  (filter #(re-find img-regex  %) (list-file-names dir)))
+  
+;list only file names
+(defn list-file-names
+  [dir]
+  (map #(.getName %) (list-files-as-file-seq dir))
+  )
+
 
 ;(get rawFormats 0)
 ;(get rawFormats 1)
@@ -42,15 +55,15 @@
 
 ;(last rawFormats)
 
-(defn doSomeFancyShit [rFormats]
-  (
-    (def value (first rFormats))
-    (if (= not-nil? value)
-      (
-        (println value) 
-        (doSomeFancyShit (next rFormats))
-      )    
-    )
-    ))
-
-(doSomeFancyShit rawFormats)
+;(defn doSomeFancyShit [rFormats]
+;  (
+;    (def value (first rFormats))
+;    (if (= not-nil? value)
+;      (
+;        (println value) 
+;        (doSomeFancyShit (next rFormats))
+;      )    
+;    )
+;    ))
+;
+;(doSomeFancyShit rawFormats)
