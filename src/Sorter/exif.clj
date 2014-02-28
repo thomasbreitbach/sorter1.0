@@ -72,7 +72,7 @@
 ;                Protocol
 ;--------------------------------------------
 (defprotocol exif
-  (exif-data [x] [x tag] "Todo: Dokumentation der Funktion")
+  (exif-data [x] "Todo: Dokumentation der Funktion")
  (exif-data-by-tag [x tag] "Todo: Dokumentation der Funktion"))
 
 (extend-protocol exif
