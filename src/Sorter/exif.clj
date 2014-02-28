@@ -90,8 +90,3 @@
     (if (instance? String tag)
       (exif-tag-for-filename s tag)
       (exif-tags-for-filename s tag))))
-
-  
-  
-  
- 
