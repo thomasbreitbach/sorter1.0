@@ -25,7 +25,7 @@
 
 (defn- extract-from-tag
   [tag]
-  (into {} (map #(hash-map (.getTagName %) (.getDescription %)) tag)))
+  (into {} (map #(hash-map (keyword (.getTagName %)) (.getDescription %)) tag)))
 
 ; #(...) Kurzform zum Erzeugen einfacher anonymer Funktionen
 ;
@@ -38,3 +38,15 @@
         exif-dirs (filter #(re-find exif-directory-regex (.getName %)) (.getDirectories metadata))
         tags (map #(.getTags %) exif-dirs)]
     (into {} (map extract-from-tag tags))))
+
+(defn exif-for-filename
+  "Loads a file from a give filename and extracts exif information into a map"
+  [filename]
+  (exif-for-file (FileInputStream. filename)))
+
+(defn exif-tag-for-filename
+  "Returns the value of desired exif tag"
+  [filename tag]
+  (get
+     (exif-for-filename filename) 
+     (keyword tag)))
