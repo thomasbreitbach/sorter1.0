@@ -72,8 +72,8 @@
 ;                Protocol
 ;--------------------------------------------
 (defprotocol exif
-  (exif-data [x] "Todo: Dokumentation der Funktion")
-  (exif-tag [x tag] "Todo: Dokumentation der Funktion"))
+  (exif-data [x] "Returns image EXIF data of a java.io.File or file path (as String)")
+  (exif-tag [x tag] "Returns the desired exif tag and value of a java.io.FIle or file path (as String)"))
 
 (extend-protocol exif
   File
