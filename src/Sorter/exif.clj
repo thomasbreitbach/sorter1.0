@@ -73,19 +73,19 @@
 ;--------------------------------------------
 (defprotocol exif
   (exif-data [x] "Todo: Dokumentation der Funktion")
- (exif-data-by-tag [x tag] "Todo: Dokumentation der Funktion"))
+  (exif-tag [x tag] "Todo: Dokumentation der Funktion"))
 
 (extend-protocol exif
   File
   (exif-data [f] (exif-for-file f))
-  (exif-data-by-tag [f tag]
+  (exif-tag [f tag]
     (if (instance? String tag)
       (exif-tag-for-file f tag)
       (exif-tags-for-file f tag)))
   
   String
   (exif-data [s] (exif-for-filename s))
-  (exif-data-by-tag [s tag]
+  (exif-tag [s tag]
     (if (instance? String tag)
       (exif-tag-for-filename s tag)
       (exif-tags-for-filename s tag))))
