@@ -1,5 +1,6 @@
 (ns Sorter.exif
-  ^"Wrapper for https://code.google.com/p/metadata-extractor/"
+  ^{:doc "Wrapper for https://code.google.com/p/metadata-extractor/"
+    :author "Thomas Breitbach & André Wißner"}
   (:use [clojure.string :only [join]])
   (:import [java.io File BufferedInputStream FileInputStream]
            [com.drew.imaging ImageMetadataReader]))
