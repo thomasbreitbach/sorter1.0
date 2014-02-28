@@ -50,3 +50,10 @@
   (get
      (exif-for-filename filename) 
      (keyword tag)))
+
+(defn exif-tags-for-filename
+  "Returns a map containing only those entries in map whose key is in keys"
+  [filename tag-seq]
+  (select-keys
+    (exif-for-filename filename)
+    tag-seq))
