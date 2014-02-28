@@ -23,21 +23,6 @@
 ;  "List all filenames in the given path as string array exl. this folder (./)"
 ;  (.list (io/file dir)))
 
-(defn count-files [dir]
-  "counts files of the given directory."
-  (count (list-files-as-file-seq dir)))
-  
-;list images (incl.  in given directory
-(defn list-images-with-path 
-  "gibt eine Liste aller Bilddateien (+ absoluter Pfad zur Datei) im gegebenen Ordner zurück"
-  [dir]
-  (filter #(re-find img-regex  %) (list-file-names-with-path dir)))
-
-(defn list-images
-  "gibt eine Liste mit Dateinamen von Bilddateien im gegegeben Ordner zurück"
-  [dir]
-  (filter #(re-find img-regex  %) (list-file-names dir)))
-  
 ;list only filenames
 (defn list-filenames
   "gibt eine Liste aller Dateinamen im gegebenen Ordner zurück"
@@ -49,6 +34,23 @@
   [dir]
   (map #(.getAbsolutePath %) (list-files-as-file-seq dir))
   )
+
+(defn count-files [dir]
+  "counts files of the given directory."
+  (count (list-files-as-file-seq dir)))
+  
+;list images (incl.  in given directory
+(defn list-images-with-path 
+  "gibt eine Liste aller Bilddateien (+ absoluter Pfad zur Datei) im gegebenen Ordner zurück"
+  [dir]
+  (filter #(re-find img-regex  %) (list-filenames-with-path dir)))
+
+(defn list-images
+  "gibt eine Liste mit Dateinamen von Bilddateien im gegegeben Ordner zurück"
+  [dir]
+  (filter #(re-find img-regex  %) (list-filenames dir)))
+  
+
 
 (defn rename-file
   "Rename old-path to new-path."
