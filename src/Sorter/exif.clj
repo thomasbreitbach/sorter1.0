@@ -16,12 +16,25 @@
 ; Welche Directories sollen berücksichtigt werden?
 (def exif-directory-regex
   (re-pattern (str "(?i)(" (join "|"
-                                ["Exif" "JPEG" "JFIF"
+                                ["GPS" "Exif" "JPEG" "JFIF"
                                  "Agfa" "Canon" "Casio" "Epson"
                                  "Fujifilm" "Kodak" "Kyocera"
                                  "Leica" "Minolta" "Nikon" "Olympus"
                                  "Panasonic" "Pentax" "Sanyo"
                                  "Sigma/Foveon" "Sony"]) ")")))
+
+(def exif-gps-directory
+  [(keyword "GPS Altitude Ref") 
+   (keyword "GPS Longitude")
+   (keyword "GPS Altitude")
+   (keyword "GPS Processing Method")
+   (keyword "GPS Img Direction Ref")
+   (keyword "GPS Img Direction")
+   (keyword "GPS Latitude")
+   (keyword "GPS Latitude Ref")
+   (keyword "GPS Longitude Ref")
+   (keyword "GPS Date Stamp")
+   (keyword "GPS Time-Stamp")])
 
 
 (defn- extract-from-tag
