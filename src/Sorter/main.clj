@@ -12,7 +12,7 @@
 
 (defn main [n]
   (if (= n "go")
-    (println "i do wat i want! Exit!")
+    (println "i do what i want! Exit!")
 
     ( (mStartscreen)
 		  (let [userInput (clojure.string/lower-case(read-line))]
