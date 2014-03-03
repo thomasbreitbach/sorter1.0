@@ -73,20 +73,25 @@
 ;                Protocol
 ;--------------------------------------------
 (defprotocol exif
-  (exif-data [x] "Returns image EXIF data of a java.io.File or file path (as String)")
-  (exif-tag [x tag] "Returns the desired exif tag and value of a java.io.FIle or file path (as String)"))
+  (exif-data 
+    [x]
+    [x tag] "Returns exif data (or if stated only the desired exif tag(s)) of a java.io.File or file path (as String)"))
 
 (extend-protocol exif
   File
-  (exif-data [f] (exif-for-file f))
-  (exif-tag [f tag]
-    (if (instance? String tag)
-      (exif-tag-for-file f tag)
-      (exif-tags-for-file f tag)))
+  (exif-data 
+    ([f tag]
+      (if (instance? String tag)
+        (exif-tag-for-file f tag)
+        (exif-tags-for-file f tag)))
+    ([f]
+      (exif-for-file f)))
   
   String
-  (exif-data [s] (exif-for-filename s))
-  (exif-tag [s tag]
-    (if (instance? String tag)
-      (exif-tag-for-filename s tag)
-      (exif-tags-for-filename s tag))))
+  (exif-data 
+    ([s tag]
+      (if (instance? String tag)
+        (exif-tag-for-filename s tag)
+        (exif-tags-for-filename s tag)))
+    ([s]  
+      (exif-for-filename s))))
