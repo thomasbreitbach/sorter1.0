@@ -1,7 +1,8 @@
 (ns Sorter.main (:gen-class))
 (use 'Sorter.gui)
 (use 'Sorter.messanges)
-
+(use 'Sorter.readDir)
+(use 'Sorter.exif)
 
 (def factorial
   (fn [n]
@@ -12,7 +13,7 @@
 
 (defn main [n]
   (if (= n "go")
-    (println "i do wat i want! Exit!")
+    (println "i do what i want! Exit!")
 
     ( (mStartscreen)
 		  (let [userInput (clojure.string/lower-case(read-line))]
@@ -28,4 +29,27 @@
 		       "Exit with Error : No match found!" ))
   )))
 
-(compile 'Sorter.main)
+(def pathToPictureDir "Z:/")
+(def pictures (list-images-with-path pathToPictureDir))
+ (def pictureName (list-images pathToPictureDir))
+(def countPics (count-files pathToPictureDir))
+
+;Not usable
+; (1 2 3) (a b c) => (1 a) (1b) (1c) (2a)...
+(defn do-picture-stuff [theOldList]
+  (doseq [x theOldList]
+    (println (str x))
+    (println (exif-data x))
+    ;(rename-file picture "D:/Fotografien/HDR - Panoramen/HDR/Jahr 2014/18.01 - Gießen Lahn/HDR/Magaretenhütte/Feld3/asd.jpg")
+    ))
+
+(do-picture-stuff pictures)
+;eoNu
+
+(loop [x countPics]
+  (when (> x 0)
+    (println x)
+    (recur (- x 1))))
+
+(for [x (range 1 10)] 
+    (* x x))
