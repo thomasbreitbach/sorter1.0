@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-//Make=Marke, Model=Bestimmtes Model der Marke, ImageHeight=Höhe des Images
+//Make=Marke, Model=Bestimmtes Model der Marke, ImageHeight=Hï¿½he des Images
 
 public class ShowExif {
 	public static String tagName ="";
@@ -24,7 +24,7 @@ public class ShowExif {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		File jpegFile = new File("D:/Fotografien/Verschieden/Jahr 2013/31.12 - Silvester 13/Andre/raw/IMG_8501.CR2");
+		File jpegFile = new File("/home/thomas/Downloads/IMG_20140302_160056.jpg");
 		
 		System.out.println(jpegFile);
 		
