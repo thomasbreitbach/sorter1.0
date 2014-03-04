@@ -29,9 +29,6 @@
 		       "Exit with Error : No match found!" ))
   )))
 
-<<<<<<< HEAD
-(compile 'Sorter.main)
-=======
 (def pathToPictureDir "Z:/")
 (def pictures (list-images-with-path pathToPictureDir))
  (def pictureName (list-images pathToPictureDir))
@@ -56,4 +53,3 @@
 
 (for [x (range 1 10)] 
     (* x x))
->>>>>>> a2ff2ea7c10e1e1ce88015be733a92b02a924e81
