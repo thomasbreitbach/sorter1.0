@@ -3,7 +3,9 @@
     :author "Thomas Breitbach & André Wißner"}
   (:use [clojure.string :only [join]])
   (:import [java.io File BufferedInputStream FileInputStream]
-           [com.drew.imaging ImageMetadataReader]))
+           [com.drew.imaging ImageMetadataReader]
+           [com.drew.metadata.exif GpsDirectory ExifThumbnailDirectory]
+           [com.drew.metadata Directory]))
 
 ; EXIF SCHEMA:
 ; [{DIRECTORY-NAME}] {TAG-NAME} - {TAG-DESCRIPTION} 
@@ -23,19 +25,6 @@
                                  "Panasonic" "Pentax" "Sanyo"
                                  "Sigma/Foveon" "Sony"]) ")")))
 
-(def exif-gps-directory
-  [(keyword "GPS Altitude Ref") 
-   (keyword "GPS Longitude")
-   (keyword "GPS Altitude")
-   (keyword "GPS Processing Method")
-   (keyword "GPS Img Direction Ref")
-   (keyword "GPS Img Direction")
-   (keyword "GPS Latitude")
-   (keyword "GPS Latitude Ref")
-   (keyword "GPS Longitude Ref")
-   (keyword "GPS Date Stamp")
-   (keyword "GPS Time-Stamp")])
-
 
 (defn- extract-from-tag
   "Todo: Doku"
@@ -48,11 +37,19 @@
 ;--------------------------------------------
 (defn- exif-for-file
   "Takes an image file (as a java.io.InputStream or java.io.File) and extracts exif information into a map"
-  [file]
-  (let [metadata (ImageMetadataReader/readMetadata file)
-        exif-dirs (filter #(re-find exif-directory-regex (.getName %)) (.getDirectories metadata))
-        tags (map #(.getTags %) exif-dirs)]
-    (into {} (map extract-from-tag tags))))
+  ([file]
+    (exif-for-file file nil))
+  
+  ([file dir]
+    (if (nil? dir)
+      (let [metadata (ImageMetadataReader/readMetadata file)
+            exif-dirs (filter #(re-find exif-directory-regex (.getName %)) (.getDirectories metadata))
+            tags (map #(.getTags %) exif-dirs)]  
+        (into {} (map extract-from-tag tags)))
+      (let [metadata (ImageMetadataReader/readMetadata file)
+            geo-tags (.getTags (.getDirectory metadata (class dir)))]
+        (into {} (extract-from-tag geo-tags)))
+      )))
 
 (defn- exif-tag-for-file
   ""
@@ -64,13 +61,17 @@
   [file tag-seq]
   (select-keys (exif-for-file file) tag-seq))
 
+
+
 ;--------------------------------------------
 ;              Filename (String)
 ;--------------------------------------------
 (defn- exif-for-filename
   "Loads a file from a give filename and extracts exif information into a map"
-  [filename]
-  (exif-for-file (FileInputStream. filename)))
+  ([filename]
+    (exif-for-file (FileInputStream. filename)))
+  ([filename dir]
+    (exif-for-file (FileInputStream. filename) dir)))
 
 (defn- exif-tag-for-filename
   "Returns the value of desired exif tag"
@@ -88,23 +89,27 @@
 (defprotocol exif
   (exif-data 
     [x]
-    [x tag] "Returns exif data (or if stated only the desired exif tag(s)) of a java.io.File or file path (as String)"))
+    [x tag-or-dir] "Returns exif data (or if stated only the desired exif tag(s)/exif directory) of a java.io.File or file path (as java.lang.String)"))
 
 (extend-protocol exif
   File
   (exif-data 
-    ([f tag]
-      (if (instance? String tag)
-        (exif-tag-for-file f tag)
-        (exif-tags-for-file f tag)))
+    ([f tag-or-dir]
+      (if (instance? String tag-or-dir)
+        (exif-tag-for-file f tag-or-dir)
+        (if (instance? Directory tag-or-dir)
+          (exif-for-file f tag-or-dir)
+          (exif-tags-for-file f tag-or-dir))))
     ([f]
       (exif-for-file f)))
   
   String
   (exif-data 
-    ([s tag]
-      (if (instance? String tag)
-        (exif-tag-for-filename s tag)
-        (exif-tags-for-filename s tag)))
+    ([s tag-or-dir]
+      (if (instance? String tag-or-dir)
+        (exif-tag-for-filename s tag-or-dir)
+        (if (instance? Directory tag-or-dir)
+          (exif-for-filename s tag-or-dir)
+          (exif-tags-for-filename s tag-or-dir))))
     ([s]  
       (exif-for-filename s))))
