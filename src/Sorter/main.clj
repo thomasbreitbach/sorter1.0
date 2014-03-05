@@ -1,49 +1,32 @@
-(ns Sorter.main (:gen-class))
+(ns Sorter.main (:gen-class)
+   (:require [clojure.contrib.command-line :as ccl]))
 (use 'Sorter.gui)
 (use 'Sorter.messanges)
 (use 'Sorter.readDir)
 (use 'Sorter.exif)
 
-(def factorial
-  (fn [n]
-    (loop [cnt n acc 1]
-       (if (zero? cnt);Wenn cnt == zero
-          acc
-          (recur (dec cnt) (* acc cnt))))))
-
-(defn main [n]
-  (if (= n "go")
-    (println "i do what i want! Exit!")
-
-    ( (mStartscreen)
-		  (let [userInput (clojure.string/lower-case(read-line))]
-	    (case userInput
-		       "help" (
-                  (mHelp)
-                  (main "")
-                  )
-		       "go" (main userInput)
-		       "exit" (print userInput)
-		       "gui" (celsius)
-		       "fac" (factorial (bigdec (read-line)))
-		       "Exit with Error : No match found!" ))
-  )))
-
-(ns cmd-line-demo
-  (:gen-class)
-  (:use clojure.contrib.command-line))
+;(use 'fotosort.gui)
+;(use 'fotosort.messanges)
 
 (defn -main [& args]
-  (with-command-line args
-      "Command line demo"
-      [[foo "This is the description for foo" 1]
-       [bar "This is the description for bar" 2]
-       [boolean? b? "This is a boolean flag."]
-       remaining]
-    (println "foo: " foo)
-    (println "bar: " bar)
+  (ccl/with-command-line args
+    "Fotosort 1.0 - Commandline Tool"
+    [
+     [help "Shows the help menu"]
+     [in "This specifies the input directory to the pictures"]
+     [out "This specifies the output directory for a new folder"]
+     [tag "To sort and rename the pictures by given tag"]
+     [tags "To sort and rename all pictures by more then one give tag"]
+     [boolean? b? "BOOL"]
+     extras]
+
+    (println "Help input: " help)
+    (println "input: " in)
+    (println "output: " out)
     (println "boolean?: " boolean?)
-    (println "remaining: " remaining)))
+    (println "extra args: " extras)
+)
+)
 
 (def pathToPictureDir "Z:/")
 (def pictures (list-images-with-path pathToPictureDir))
@@ -58,7 +41,7 @@
     (println (exif-data x))
     ;(rename-file picture "D:/Fotografien/HDR - Panoramen/HDR/Jahr 2014/18.01 - Gießen Lahn/HDR/Magaretenhütte/Feld3/asd.jpg")
     ))
-
+(exif-data "Z:/asd.jpg")
 (do-picture-stuff pictures)
 ;eoNu
 
