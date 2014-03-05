@@ -2,7 +2,9 @@
   ^{:doc "Wrapper for https://code.google.com/p/metadata-extractor/"
     :author "Thomas Breitbach & André Wißner"}
   (:use [clojure.string :only [join]])
+  (:require [clj-http.client :as http-client])
   (:import [java.io File BufferedInputStream FileInputStream]
+           [java.net URL]
            [com.drew.imaging ImageMetadataReader]
            [com.drew.metadata.exif GpsDirectory ExifThumbnailDirectory]
            [com.drew.metadata Directory]))
@@ -69,7 +71,7 @@
 (defn- exif-for-filename
   "Loads a file from a give filename and extracts exif information into a map"
   ([filename]
-    (exif-for-file (FileInputStream. filename)))
+    (exif-for-filename (FileInputStream. filename) nil))
   ([filename dir]
     (exif-for-file (FileInputStream. filename) dir)))
 
@@ -82,6 +84,33 @@
   "Returns a map containing only those entries in map whose key is in keys"
   [filename tag-seq]
   (exif-tags-for-file (FileInputStream. filename) tag-seq))
+
+;--------------------------------------------
+;                URL
+;--------------------------------------------
+(defn- exif-for-url
+  ""
+  ([url]
+    (exif-for-url url nil))
+  ([url dir]
+    (println "hallo")
+    (exif-for-file 
+      (BufferedInputStream. (:body (http-client/get (.toString url) {:as :stream}))) 
+      dir)))
+
+(defn- exif-tag-for-url
+  ""
+  [url tag]
+  (exif-tag-for-file 
+    (BufferedInputStream. (:body (http-client/get (.toString url) {:as :stream}))) 
+    tag))
+
+(defn- exif-tags-for-url
+  ""
+  [url tag-seq]
+  (exif-tags-for-file
+    (BufferedInputStream. (:body (http-client/get (.toString url) {:as :stream})))
+    tag-seq))
 
 ;--------------------------------------------
 ;                Protocol
@@ -112,4 +141,15 @@
           (exif-for-filename s tag-or-dir)
           (exif-tags-for-filename s tag-or-dir))))
     ([s]  
-      (exif-for-filename s))))
+      (exif-for-filename s)))
+  
+   URL
+  (exif-data
+    ([url]
+      (exif-for-url url))
+    ([url tag-or-dir]
+      (if (instance? String tag-or-dir)
+        (exif-tag-for-url url tag-or-dir)
+        (if (instance? Directory tag-or-dir)
+          (exif-for-url url tag-or-dir)
+          (exif-tags-for-url url tag-or-dir))))))
