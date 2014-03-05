@@ -1,36 +1,29 @@
 (ns Sorter.messanges)
 
 (defn mHelp []
-  (println "////////////////////////////////////////////////////////////////////////////////////
-//   Helpfile                                                                     //
-//                                                                                //
-//   >>Help - Gives you some fancy information.                                   //
-//   >>Go   - It will start to sort all the Images in a new folder.               //
-//            IMPORTANT: This programm must be in the same folder as the images!  //
-//   >>GUI  - If you want a GUI, you can have a GUI!                              //
-//   >>Exit - It will close this programm!                                        //
-//                                                                                //
-//   ENTER for go forward...                                                      //
-////////////////////////////////////////////////////////////////////////////////////")
+  (println "Use these commands:
+ 
+--tag  //To rename and sort all the picture by an given tag
+--tags //To rename and short alle the pictures by given tags
+--in   //To give the source folder
+--out  //To give a different output folder
+--help //Show the help dialog
+
+")
   )
 
 (defn mStartscreen []
 (println "
-////////////////////////////////////////////////////////////////////////////////////
-//                                 Image-Sorter 1.0                               //
-//                                                                                //
-//                               by Thomas Breitbach                              //
-//                                  André  Wißner                                 //
-//                                                                                //
-////////////////////////////////////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////////////////////////////////////
-//   Some available input keys:                                                   //
-//                                                                                //
-//   >>Help - Gives you some fancy information.                                   //
-//   >>Go   - It will start to sort all the Images in a new folder.               //
-//            IMPORTANT: This programm must be in the same folder as the images!  //
-//   >>GUI  - If you want a GUI, you can have a GUI!                              //
-//   >>Exit - It will close this programm!                                        //
-////////////////////////////////////////////////////////////////////////////////////
-"))
+///////////////////////////////////////////////////////////////////////////////
+//                                                                           //
+//                              Fotosort 1.0                                 //
+//                                                                           //
+//                          by Thomas Breitbach                              //
+//                             Andre  Wissner                                //
+//                                                                           //
+//                 https://github.com/andrewissner/sorter1.0                 //
+//                                                                           //
+///////////////////////////////////////////////////////////////////////////////
+")
+(mHelp)
+)

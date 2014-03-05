@@ -6,23 +6,40 @@
 (use 'Sorter.exif)
 
 ;(use 'fotosort.gui)
-;(use 'fotosort.messanges)
+(use 'fotosort.messanges)
 
 (defn -main [& args]
   (ccl/with-command-line args
     "Fotosort 1.0 - Commandline Tool"
     [
      [help "Shows the help menu"]
-     [in "This specifies the input directory to the pictures"]
-     [out "This specifies the output directory for a new folder"]
-     [tag "To sort and rename the pictures by given tag"]
+     [in   "This specifies the input directory to the pictures"]
+     [out  "This specifies the output directory for a new folder"]
+     [tag  "To sort and rename the pictures by given tag"]
      [tags "To sort and rename all pictures by more then one give tag"]
      [boolean? b? "BOOL"]
      extras]
 
-    (println "Help input: " help)
-    (println "input: " in)
-    (println "output: " out)
+    (if 
+      (not (clojure.string/blank? help)) 
+      (println "Help is on the way..."))
+    
+    (if
+      (not (clojure.string/blank? in))
+      (println "This is the input:" in))
+    
+    (if
+      (not (clojure.string/blank? out))
+      (println "This is the output:" out))
+    
+    (if
+      (not (clojure.string/blank? tag))
+      (println "sort and rename by tag:" tag))
+    
+    (if
+      (not (clojure.string/blank? tags))
+      (println "sort and rename by tags:" tags))
+    
     (println "boolean?: " boolean?)
     (println "extra args: " extras)
 )
