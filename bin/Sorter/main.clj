@@ -29,9 +29,22 @@
 		       "Exit with Error : No match found!" ))
   )))
 
-<<<<<<< HEAD
-(compile 'Sorter.main)
-=======
+(ns cmd-line-demo
+  (:gen-class)
+  (:use clojure.contrib.command-line))
+
+(defn -main [& args]
+  (with-command-line args
+      "Command line demo"
+      [[foo "This is the description for foo" 1]
+       [bar "This is the description for bar" 2]
+       [boolean? b? "This is a boolean flag."]
+       remaining]
+    (println "foo: " foo)
+    (println "bar: " bar)
+    (println "boolean?: " boolean?)
+    (println "remaining: " remaining)))
+
 (def pathToPictureDir "Z:/")
 (def pictures (list-images-with-path pathToPictureDir))
  (def pictureName (list-images pathToPictureDir))
@@ -56,4 +69,3 @@
 
 (for [x (range 1 10)] 
     (* x x))
->>>>>>> a2ff2ea7c10e1e1ce88015be733a92b02a924e81
