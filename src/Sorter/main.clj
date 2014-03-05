@@ -12,11 +12,12 @@
   (ccl/with-command-line args
     "Fotosort 1.0 - Commandline Tool"
     [
-     [help "Shows the help menu"]
-     [in   "This specifies the input directory to the pictures"]
-     [out  "This specifies the output directory for a new folder"]
-     [tag  "To sort and rename the pictures by given tag"]
-     [tags "To sort and rename all pictures by more then one give tag"]
+     [help     "Shows the help menu"]
+     [listtags "Lists all the tags to use for"]
+     [in       "This specifies the input directory to the pictures"]
+     [out      "This specifies the output directory for a new folder"]
+     [tag      "To sort and rename the pictures by given tag"]
+     [tags     "To sort and rename all pictures by more then one give tag"]
      [boolean? b? "BOOL"]
      extras]
 
@@ -39,6 +40,10 @@
     (if
       (not (clojure.string/blank? tags))
       (println "sort and rename by tags:" tags))
+    
+    (if
+      (not (clojure.string/blank? listtags))
+      (println "ListTags" listtags))
     
     (println "boolean?: " boolean?)
     (println "extra args: " extras)

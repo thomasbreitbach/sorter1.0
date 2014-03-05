@@ -3,11 +3,13 @@
 (defn mHelp []
   (println "Use these commands:
  
---tag  //To rename and sort all the picture by an given tag
---tags //To rename and short alle the pictures by given tags
---in   //To give the source folder
---out  //To give a different output folder
---help //Show the help dialog
+--tag      //To rename and sort all the picture by an given tag
+--tags     //To rename and short alle the pictures by given tags
+             use \"tag1 tag2 ..\"
+--in       //To give the source folder
+--out      //To give a different output folder
+--help     //Show the help dialog
+--listtags //To show all avalable tags
 
 ")
   )
