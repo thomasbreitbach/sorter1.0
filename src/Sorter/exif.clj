@@ -29,14 +29,14 @@
 
 
 (defn- extract-from-tag
-  "Todo: Doku"
+  "Extracts a Tag object into its key-value representation"
   [tag]
   (into {} (map #(hash-map (keyword (.getTagName %)) (.getDescription %)) tag)))
 
 
-;--------------------------------------------
+;-------------------------------------------------
 ;              File (File)
-;--------------------------------------------
+;-------------------------------------------------
 (defn- exif-for-file
   "Takes an image file (as a java.io.InputStream or java.io.File) and extracts exif information into a map"
   ([file]
@@ -45,11 +45,11 @@
   ([file dir]
     (if (nil? dir)
       (let [metadata (ImageMetadataReader/readMetadata file)
-            exif-dirs (filter #(re-find exif-directory-regex (.getName %)) (.getDirectories metadata))
+            exif-dirs (filter #(re-find exif-directory-regex (.getName %)) (.getDirectories metadata)) ;TODO: TRY-CATCH einbauen
             tags (map #(.getTags %) exif-dirs)]  
         (into {} (map extract-from-tag tags)))
       (let [metadata (ImageMetadataReader/readMetadata file)
-            geo-tags (.getTags (.getDirectory metadata (class dir)))]
+            geo-tags (.getTags (.getDirectory metadata (class dir)))] ;TODO: TRY-CATCH einbauen
         (into {} (extract-from-tag geo-tags)))
       )))
 
@@ -65,13 +65,13 @@
 
 
 
-;--------------------------------------------
+;-------------------------------------------------
 ;              Filename (String)
-;--------------------------------------------
+;-------------------------------------------------
 (defn- exif-for-filename
   "Loads a file from a give filename and extracts exif information into a map"
   ([filename]
-    (exif-for-filename (FileInputStream. filename) nil))
+    (exif-for-filename filename nil))
   ([filename dir]
     (exif-for-file (FileInputStream. filename) dir)))
 
@@ -85,15 +85,14 @@
   [filename tag-seq]
   (exif-tags-for-file (FileInputStream. filename) tag-seq))
 
-;--------------------------------------------
+;-------------------------------------------------
 ;                URL
-;--------------------------------------------
+;-------------------------------------------------
 (defn- exif-for-url
   ""
   ([url]
     (exif-for-url url nil))
   ([url dir]
-    (println "hallo")
     (exif-for-file 
       (BufferedInputStream. (:body (http-client/get (.toString url) {:as :stream}))) 
       dir)))
@@ -112,9 +111,9 @@
     (BufferedInputStream. (:body (http-client/get (.toString url) {:as :stream})))
     tag-seq))
 
-;--------------------------------------------
+;-------------------------------------------------
 ;                Protocol
-;--------------------------------------------
+;-------------------------------------------------
 (defprotocol exif
   (exif-data 
     [x]
