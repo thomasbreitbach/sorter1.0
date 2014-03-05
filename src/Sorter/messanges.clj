@@ -9,7 +9,7 @@
 --in       //To give the source folder
 --out      //To give a different output folder
 --help     //Show the help dialog
---listtags //To show all avalable tags
+--listtags //To show all avaleble tags
 
 ")
   )
@@ -28,4 +28,15 @@
 ///////////////////////////////////////////////////////////////////////////////
 ")
 (mHelp)
+)
+
+(defn mTags []
+(println "All avaleble Tags:
+Marke  //Get the type of camera branding
+Model  //Get the model of a camera
+Date   //Get the picture date
+Time   //Get the picture time
+Height //Get the dimension height from the picture
+Width  //Get the dimension width from the picture"
+)
 )
