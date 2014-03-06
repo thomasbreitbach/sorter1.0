@@ -10,5 +10,5 @@
                  [org.clojure/clojure-contrib "1.2.0"]
                  [clargon "1.0.0"]]
   :dev-dependencies [[swank-clojure "1.2.1"]]
-  :main [Sorter.main]
+  :main Sorter.main
  )
