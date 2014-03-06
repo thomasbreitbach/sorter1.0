@@ -6,7 +6,7 @@
 (use 'Sorter.exif)
 
 ;(use 'fotosort.gui)
-(use 'fotosort.messanges)
+;(use 'fotosort.messanges)
 
 (defn -main [& args]
   (ccl/with-command-line args
