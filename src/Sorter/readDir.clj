@@ -11,7 +11,6 @@
 
 ;case insensitive regex pattern to retrieve only images
 (def img-regex
-  "case insensitive regex pattern to retrieve only images"
   (re-pattern (str ".+\\.(?i:(" (join "|"
                                  imgFormats) "))")))
 
