@@ -47,13 +47,49 @@
     ;(println boolean?)
     ;(println extras)
 	(mStartscreen)
+
+ 
+  (def pathToPictureDir in)
+  (def pictures (list-images-with-path pathToPictureDir))
+  (def pictureName (list-images pathToPictureDir))
+  (def countPics (count-files pathToPictureDir))
+  
+  ;Fehlerhaft
+  (defn do-test [theData theTag]
+  (doseq [x theData]
+    (
+      (println (exif-data x theTag))
+      )))
+    
+  
+  (println pictureName) 
+  (do-test pictures tag)
+  ;(println (exif-data "Z:/asd.jpg" "Date/Time"))
+  
 )
 )
 
-; (def pathToPictureDir "Z:/")
-;(def pictures (list-images-with-path pathToPictureDir))
- ;(def pictureName (list-images pathToPictureDir))
-;(def countPics (count-files pathToPictureDir))
+  ;MAP TEST
+  (def personList)
+  (defn setPseron 
+    [name age salary company]
+    (
+      (conj personList ({:name name :age age :salary salary :company company}))  
+      ))
+  
+;geht och nicht, wäre für das einzelne bild eventuell interessant  
+;(setPerson "test1" "29" "313123" "testcomp")
+
+
+
+
+
+
+
+
+
+
+
 
 ;Not usable
 ; (1 2 3) (a b c) => (1 a) (1b) (1c) (2a)...
