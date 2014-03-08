@@ -43,15 +43,20 @@
     (exif-for-file file nil))
   
   ([file dir]
-    (if (nil? dir)
-      (let [metadata (ImageMetadataReader/readMetadata file)
-            exif-dirs (filter #(re-find exif-directory-regex (.getName %)) (.getDirectories metadata)) ;TODO: TRY-CATCH einbauen
-            tags (map #(.getTags %) exif-dirs)]  
-        (into {} (map extract-from-tag tags)))
-      (let [metadata (ImageMetadataReader/readMetadata file)
-            geo-tags (.getTags (.getDirectory metadata (class dir)))] ;TODO: TRY-CATCH einbauen
-        (into {} (extract-from-tag geo-tags)))
-      )))
+    (try 
+      (if (nil? dir)
+        ;then
+        (let [metadata (ImageMetadataReader/readMetadata file)
+              exif-dirs (filter #(re-find exif-directory-regex (.getName %)) (.getDirectories metadata))
+              tags (map #(.getTags %) exif-dirs)]
+          (into {} (map extract-from-tag tags)))
+        ;else
+        (let [metadata (ImageMetadataReader/readMetadata file)
+              geo-tags (.getTags (.getDirectory metadata (class dir)))]
+          (into {} (extract-from-tag geo-tags))))
+      (catch Exception e
+          (println (str "caught exception: " (.getMessage e)))
+          nil))))
 
 (defn- exif-tag-for-file
   ""
@@ -63,7 +68,26 @@
   [file tag-seq]
   (select-keys (exif-for-file file) tag-seq))
 
+;-------------------------------------------------
+;                Loading files
+;-------------------------------------------------
+(defn load-file-from-fs
+  "loads a file from filesystem"
+  [filename]
+  (try
+    (FileInputStream. filename)
+    (catch Exception e
+      (println (str "caught exception for file '" filename "': " (.getMessage e)))
+      nil)))
 
+(defn load-file-from-url
+  "loads a file from the web by the given url"
+  [url]
+  (try
+    (BufferedInputStream. (:body (http-client/get (.toString url) {:as :stream})))
+    (catch Exception e
+      (println (str "caught exception for url '" url "': " (.getMessage e)))
+      nil)))
 
 ;-------------------------------------------------
 ;              Filename (String)
@@ -73,17 +97,17 @@
   ([filename]
     (exif-for-filename filename nil))
   ([filename dir]
-    (exif-for-file (FileInputStream. filename) dir)))
+    (exif-for-file (load-file-from-fs filename) dir)))
 
 (defn- exif-tag-for-filename
   "Returns the value of desired exif tag"
   [filename tag]
-  (exif-tag-for-file (FileInputStream. filename) tag))
+  (exif-tag-for-file (load-file-from-fs filename) tag))
 
 (defn- exif-tags-for-filename
   "Returns a map containing only those entries in map whose key is in keys"
   [filename tag-seq]
-  (exif-tags-for-file (FileInputStream. filename) tag-seq))
+  (exif-tags-for-file (load-file-from-fs filename) tag-seq))
 
 ;-------------------------------------------------
 ;                URL
@@ -93,23 +117,17 @@
   ([url]
     (exif-for-url url nil))
   ([url dir]
-    (exif-for-file 
-      (BufferedInputStream. (:body (http-client/get (.toString url) {:as :stream}))) 
-      dir)))
+    (exif-for-file (load-file-from-url url) dir)))
 
 (defn- exif-tag-for-url
   ""
   [url tag]
-  (exif-tag-for-file 
-    (BufferedInputStream. (:body (http-client/get (.toString url) {:as :stream}))) 
-    tag))
+  (exif-tag-for-file (load-file-from-url url) tag))
 
 (defn- exif-tags-for-url
   ""
   [url tag-seq]
-  (exif-tags-for-file
-    (BufferedInputStream. (:body (http-client/get (.toString url) {:as :stream})))
-    tag-seq))
+  (exif-tags-for-file (load-file-from-url url) tag-seq))
 
 ;-------------------------------------------------
 ;                Protocol
@@ -117,7 +135,8 @@
 (defprotocol exif
   (exif-data 
     [x]
-    [x tag-or-dir] "Returns exif data (or if stated only the desired exif tag(s)/exif directory) of a java.io.File or file path (as java.lang.String)"))
+    [x tag-or-dir] 
+    "Returns exif data (or if stated only the desired exif tag(s)/exif directory) of a java.io.File, file path (as java.lang.String) or java.net.URL"))
 
 (extend-protocol exif
   File
