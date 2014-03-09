@@ -9,7 +9,9 @@
            [com.drew.metadata.exif GpsDirectory ExifThumbnailDirectory]
            [com.drew.metadata Directory]))
 
-; EXIF SCHEMA:
+;-------------------------------------------------
+;             EXIF SCHEMA
+;-------------------------------------------------
 ; [{DIRECTORY-NAME}] {TAG-NAME} - {TAG-DESCRIPTION} 
 ;
 ; EXIF EXAMPLES:
@@ -17,7 +19,7 @@
 ; [Canon Makernote] Flash Mode - No flash fired
 ; [Exif Thumbnail] Thumbnail Image Width - 668 pixels
 
-; Welche Directories sollen berücksichtigt werden?
+; regular expression for important exif directories
 (def exif-directory-regex
   (re-pattern (str "(?i)(" (join "|"
                                 ["GPS" "Exif" "JPEG" "JFIF"
@@ -38,7 +40,8 @@
 ;              File (File)
 ;-------------------------------------------------
 (defn- exif-for-file
-  "Takes an image file (as a java.io.InputStream or java.io.File) and extracts exif information into a map"
+  "Takes an image file (as a java.io.InputStream or java.io.File)
+  and extracts exif information into a map"
   ([file]
     (exif-for-file file nil))
   
@@ -59,12 +62,12 @@
           nil))))
 
 (defn- exif-tag-for-file
-  ""
+  "Returns only one tag as map"
   [file tag]
   (get (exif-for-file file) (keyword tag)))
 
 (defn- exif-tags-for-file
-  ""
+  "Returns the desired tags (if present) as map"
   [file tag-seq]
   (select-keys (exif-for-file file) tag-seq))
 
@@ -72,16 +75,18 @@
 ;                Loading files
 ;-------------------------------------------------
 (defn load-file-from-fs
-  "loads a file from filesystem"
+  "Loads a file from file system, named by the path name
+ 'filename' in the file system"
   [filename]
   (try
     (FileInputStream. filename)
     (catch Exception e
       (println (str "caught exception for file '" filename "': " (.getMessage e)))
-      nil)))
+      nil)
+    (finally (.close filename))))
 
 (defn load-file-from-url
-  "loads a file from the web by the given url"
+  "Loads a file from the web by the given url"
   [url]
   (try
     (BufferedInputStream. (:body (http-client/get (.toString url) {:as :stream})))
@@ -93,19 +98,21 @@
 ;              Filename (String)
 ;-------------------------------------------------
 (defn- exif-for-filename
-  "Loads a file from a give filename and extracts exif information into a map"
+  "Loads a file from a filename (named by the path namein the file system)
+   and extracts exif information into a map."
   ([filename]
     (exif-for-filename filename nil))
   ([filename dir]
     (exif-for-file (load-file-from-fs filename) dir)))
 
 (defn- exif-tag-for-filename
-  "Returns the value of desired exif tag"
+  "Returns the value as string of desired exif tag"
   [filename tag]
   (exif-tag-for-file (load-file-from-fs filename) tag))
 
 (defn- exif-tags-for-filename
-  "Returns a map containing only those entries in map whose key is in keys"
+  "Returns a map containing only those entries in map whose key is 
+  in 'tag-seq' (if present)"
   [filename tag-seq]
   (exif-tags-for-file (load-file-from-fs filename) tag-seq))
 
@@ -136,7 +143,9 @@
   (exif-data 
     [x]
     [x tag-or-dir] 
-    "Returns exif data (or if stated only the desired exif tag(s)/exif directory) of a java.io.File, file path (as java.lang.String) or java.net.URL"))
+    "Returns exif data (or if stated only the desired exif 
+    tag(s)/exif directory) of a java.io.File, file path 
+    (as java.lang.String) or java.net.URL"))
 
 (extend-protocol exif
   File
