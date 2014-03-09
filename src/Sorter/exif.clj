@@ -30,10 +30,23 @@
                                  "Sigma/Foveon" "Sony"]) ")")))
 
 
+(def url-regex
+  (re-pattern (str "^(http|https):\\/\\/.*$")))
+
+(defn- url? 
+  "Checks string for url. Returs true if string starts with 'http://' oder 'https://'"
+  [url]
+  (if (nil? (re-find url-regex url))
+    false
+    true))
+
+
 (defn- extract-from-tag
   "Extracts a Tag object into its key-value representation"
   [tag]
   (into {} (map #(hash-map (keyword (.getTagName %)) (.getDescription %)) tag)))
+
+
 
 
 ;-------------------------------------------------
@@ -82,8 +95,7 @@
     (FileInputStream. filename)
     (catch Exception e
       (println (str "caught exception for file '" filename "': " (.getMessage e)))
-      nil)
-    (finally (.close filename))))
+      nil)))
 
 (defn load-file-from-url
   "Loads a file from the web by the given url"
@@ -162,13 +174,23 @@
   String
   (exif-data 
     ([s tag-or-dir]
-      (if (instance? String tag-or-dir)
-        (exif-tag-for-filename s tag-or-dir)
-        (if (instance? Directory tag-or-dir)
-          (exif-for-filename s tag-or-dir)
-          (exif-tags-for-filename s tag-or-dir))))
-    ([s]  
-      (exif-for-filename s)))
+      (if (url? s)
+        ;s is treated as url
+        (if (instance? String tag-or-dir)
+          (exif-tag-for-url s tag-or-dir)
+          (if (instance? Directory tag-or-dir)
+            (exif-for-url s tag-or-dir)
+            (exif-tags-for-url s tag-or-dir)))
+        ;s isn't an url
+        (if (instance? String tag-or-dir)
+          (exif-tag-for-filename s tag-or-dir)
+          (if (instance? Directory tag-or-dir)
+            (exif-for-filename s tag-or-dir)
+            (exif-tags-for-filename s tag-or-dir)))))
+    ([s]
+      (if (url? s)
+        (exif-for-url (URL. s))
+        (exif-for-filename s))))
   
    URL
   (exif-data
