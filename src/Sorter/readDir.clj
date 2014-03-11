@@ -55,32 +55,3 @@
   "Rename old-path to new-path."
   [old-path new-path]
   (.renameTo (io/as-file old-path) (io/as-file new-path)))
-
-
-;###########################################
-;##############UNKNOWN STUFF################
-;##########################################
-
-;(get rawFormats 0)
-;(get rawFormats 1)
-;(;get rawFormats 2)
-;(get rawFormats 3)
-
-;(first rawFormats)
-;(second rawFormats)
-;(next rawFormats)
-
-;(last rawFormats)
-
-;(defn doSomeFancyShit [rFormats]
-;  (
-;    (def value (first rFormats))
-;    (if (= not-nil? value)
-;      (
-;        (println value) 
-;        (doSomeFancyShit (next rFormats))
-;      )    
-;    )
-;    ))
-;
-;(doSomeFancyShit rawFormats)
