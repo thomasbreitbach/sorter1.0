@@ -54,4 +54,4 @@
 (defn rename-file
   "Rename old-path to new-path."
   [old-path new-path]
-  (.renameTo (io/as-file old-path) (io/as-file new-path)))
+  (.renameTo (File. old-path) (File. new-path)))

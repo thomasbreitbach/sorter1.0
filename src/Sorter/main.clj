@@ -1,5 +1,6 @@
 (ns Sorter.main (:gen-class)
-   (:require [clojure.contrib.command-line :as ccl]))
+   (:require [clojure.contrib.command-line :as ccl])
+   (:require [clojure.java.io :as io]))
 (use '[clojure.string :only (join split)])
 
 (use 'Sorter.gui)
@@ -74,12 +75,12 @@
 ;1.) einzelnes Bild ändern by Date
 
 ;Halte den alten Namen
-(def picName "asd.JPG")
+(def picName "a.jpg")
 
 ;Halte den pfad zur Datei
-(def path "Z:/") 
+(def path "C:/Users/vU/Pictures/") 
 
-(def oldDate (exif-data "Z:/asd.jpg" "Date/Time"))
+(def oldDate (exif-data (str path picName) "Date/Time"))
 
 ;Hole das Datum und zerlege es in ein Vector
 (defn split-the-date 
@@ -90,6 +91,7 @@
 
 ;Formatiere das Datum YEAR-MONTH-DAY.HOUR-MINUTE-SECOND
 (defn create-new-date 
+  "Create a new date by given YEAR:MONTH:DAY H:M:S"
   [theDate]
   (let [[year month day h m s] theDate]
     (str year "-" month "-" day "." h "-" m "-" s)))
@@ -101,10 +103,53 @@
 
 ;Show the new filename
 (def newFile (create-new-filename picName path (create-new-date (split-the-date oldDate))))
+(def oldFile (str path picName))
 
-(rename-file (str path picName) newFile)
+(rename-file oldFile newFile)
 
 ;##############################################################################################
 
 
+(defn split-the-date 
+  "Split the date/time from tag to a vector"
+  [date]
+    (split 
+      date
+      #"[:*\s*]+"))
+
+
+(defn create-new-date 
+  "Create a new date by given YEAR:MONTH:DAY H:M:S"
+  [theDate]
+  (let [[year month day h m s] theDate]
+    (str year "-" month "-" day "." h "-" m "-" s)))
+
+
+(defn copy-file
+  "Copy files"
+  [source-path dest-path]
+  (io/copy (io/file source-path) (io/file dest-path)))
+
+
+(defn rename-file-by-tag
+  "Rename a bench of filenames by tag"
+  [filenames tag]
+  (doseq [x filenames]
+    (if (= tag "Date/Time") 
+      (copy-file (str path x) (str path (create-new-date 
+                                       (split-the-date 
+                                         (exif-data (str path x) tag)
+                                         )
+                                       )
+                "_" x)
+             )
+      (copy-file (str path x) (str path 
+               (exif-data (str path x) tag)
+                  "_" x)
+               )
+     )
+))
+
+(def pictureName (list-images path))
+(rename-file-by-tag pictureName "Date/Time")
 
