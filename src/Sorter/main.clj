@@ -1,5 +1,7 @@
 (ns Sorter.main (:gen-class)
    (:require [clojure.contrib.command-line :as ccl]))
+(use '[clojure.string :only (join split)])
+
 (use 'Sorter.gui)
 (use 'Sorter.messanges)
 (use 'Sorter.readDir)
@@ -69,44 +71,40 @@
 )
 )
 
-  ;MAP TEST
-  (def personList)
-  (defn setPseron 
-    [name age salary company]
-    (
-      (conj personList ({:name name :age age :salary salary :company company}))  
-      ))
-  
-;geht och nicht, wäre für das einzelne bild eventuell interessant  
-;(setPerson "test1" "29" "313123" "testcomp")
+;1.) einzelnes Bild ändern by Date
+
+;Halte den alten Namen
+(def picName "asd.JPG")
+
+;Halte den pfad zur Datei
+(def path "Z:/") 
+
+(def oldDate (exif-data "Z:/asd.jpg" "Date/Time"))
+
+;Hole das Datum und zerlege es in ein Vector
+(defn split-the-date 
+  [date]
+    (split 
+      date
+      #"[:*\s*]+"))
+
+;Formatiere das Datum YEAR-MONTH-DAY.HOUR-MINUTE-SECOND
+(defn create-new-date 
+  [theDate]
+  (let [[year month day h m s] theDate]
+    (str year "-" month "-" day "." h "-" m "-" s)))
+
+;Erstelle einen neuen Namen mit Tag
+(defn create-new-filename 
+  [old-filename path-to-file tag]
+    (str path-to-file tag "." old-filename))
+
+;Show the new filename
+(def newFile (create-new-filename picName path (create-new-date (split-the-date oldDate))))
+
+(rename-file (str path picName) newFile)
+
+;##############################################################################################
 
 
 
-
-
-
-
-
-
-
-
-
-;Not usable
-; (1 2 3) (a b c) => (1 a) (1b) (1c) (2a)...
-;(defn do-picture-stuff [theOldList]
- ; (doseq [x theOldList]
-  ;  (println (str x))
-   ; (println (exif-data x))
-    ;(rename-file picture "D:/Fotografien/HDR - Panoramen/HDR/Jahr 2014/18.01 - Gießen Lahn/HDR/Magaretenhütte/Feld3/asd.jpg")
-    ;))
-;(exif-data "Z:/asd.jpg")
-;(do-picture-stuff pictures)
-;eoNu
-
-;(loop [x countPics]
- ; (when (> x 0)
-  ;  (println x)
-   ; (recur (- x 1))))
-
-;(for [x (range 1 10)] 
-    ;(* x x))
