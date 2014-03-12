@@ -57,7 +57,7 @@ Wobei param1 ein Bild sein muss. Param2 ist optional und dient als Filter der Ex
 ```
 #### URL
 ```bash
-=> (exif-data (URL. "pfad/zum/bild/bild.jpg"))
+(exif-data (URL. "pfad/zum/bild/bild.jpg"))
 
 (exif-data (URL. "pfad/zum/bild/bild.jpg") "Key")
 
