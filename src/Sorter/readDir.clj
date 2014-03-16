@@ -49,8 +49,6 @@
   [dir]
   (filter #(re-find img-regex  %) (list-filenames dir)))
   
-
-
 (defn rename-file
   "Rename old-path to new-path."
   [old-path new-path]
