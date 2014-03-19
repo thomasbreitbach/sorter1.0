@@ -96,15 +96,28 @@
       (def theTag "Date/Time")
       )
     
-    (if listtags?
-      (mTags))
-
-   (if 
-      (and (not help)
-           (not in)
-           (not out)
-           (not tag)) 
+    (if (and
+          (clojure.string/blank? tag)
+          (clojure.string/blank? in)
+          (clojure.string/blank? out))
+      (
+        (if listtags?
+      (mTags)
       (mStartscreen)
-      (rename-file-by-tag theInput theOutput theTag))
+      )
+    
+    (println "Default operation: \n IN is ./ \n OUT is ./ \n TAG is Date/Time\n\nStart the default operation? (J/N)")
+   
+         ;(rename-file-by-tag theInput theOutput theTag)
+
+    (def runDef (read-line))
+    (if (or (= runDef "j") (= runDef "J"))
+      (
+        (rename-file-by-tag theInput theOutput theTag)
+        (println "Job done!")
+        )
+      ))
+      (rename-file-by-tag theInput theOutput theTag)
+      )   
 )
 )
