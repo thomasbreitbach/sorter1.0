@@ -51,6 +51,62 @@
   (io/copy (io/file source-path) (io/file dest-path)))
 
 
+(defn- copy-image-with-format
+  "Function to read the exif data and write new pictures with new name"
+  [theIn theOut tag nFolder]  
+  
+  ;(def tagList (split-whitespace tag)); only you come from repl
+  ;(println tag)
+  
+  (def theString "")
+  (def res (list-images (str theIn)))
+  (doseq [x res]
+    (doseq [t tag]
+      (if (= t "Date/Time")
+        (def theString 
+          (str theString
+               (create-new-date
+                 (split-the-date (exif-data (str theIn "\\" x) t))
+                 )))
+        
+        (if (= t "Model")
+          (def theString
+            (str theString 
+                 (create-new-model
+                   (split-whitespace 
+                     (exif-data (str theIn "\\" x) t)
+                     ))))
+          
+          (if (= t "Make")
+            (def theString
+              (str theString
+                   (create-new-model
+                     (split-whitespace 
+                       (exif-data (str theIn "\\" x) t)
+                       ))))
+            (def theString 
+               (str theString
+                   (exif-data (str theIn "\\" x) t)
+                   ))
+            )
+          )
+        )
+      );EOF DOSEQ
+  (if (not (clojure.string/blank? nFolder))
+      (if (.mkdir (new File (str theOut "\\" nFolder)))
+        (println "New folder created: " nFolder) 
+        (def newOut (str theOut "\\" nFolder "\\" theString "_"))
+        )
+      (def newOut (str theOut "\\" theString "_"))
+      )
+    (copy-file 
+      (str theIn "\\" x) 
+      (str newOut x)
+          )
+    (def theString "")
+    )
+  )
+
 
 (defn -main [& args]
   (ccl/with-command-line args
@@ -110,10 +166,9 @@
         (if (= readCmd "j")
           (
             (if (= theInput theOutput)
-              (copy-image-with-format theInput theOutput theTag theNewFolder)
-              (copy-image-with-format theInput theOutput theTag theNewFolder)
+              (copy-image-with-format  theInput theOutput theTag theNewFolder)
+              (copy-image-with-format  theInput theOutput theTag theNewFolder)
               )
-            
             (println "Job done!")
             )
           (println "Nothing to do here!")
@@ -124,59 +179,7 @@
     )
   )
 
-(defn copy-image-with-format
-  "Function to read the exif data and write new pictures with new name"
-  [theIn theOut tag nFolder]  
-  
-  (def tagList (split-whitespace tag))
-  (def theString "")
-  (def res (list-images (str theIn)))
-  (doseq [x res]
-    (doseq [t tagList]
-      (if (= t "Date/Time")
-        (def theString 
-          (str theString
-               (create-new-date
-                 (split-the-date (exif-data (str theIn "\\" x) t))
-                 )))
-        
-        (if (= t "Model")
-          (def theString
-            (str theString 
-                 (create-new-model
-                   (split-whitespace 
-                     (exif-data (str theIn "\\" x) t)
-                     ))))
-          
-          (if (= t "Make")
-            (def theString
-              (str theString
-                   (create-new-model
-                     (split-whitespace 
-                       (exif-data (str theIn "\\" x) t)
-                       ))))
-            (def theString 
-               (str theString
-                   (exif-data (str theIn "\\" x) t)
-                   ))
-            )
-          )
-        )
-      );EOF DOSEQ
-  (if (not (clojure.string/blank? nFolder))
-      (if (.mkdir (new File (str theOut "\\" nFolder)))
-        (println "New folder created: " nFolder) 
-        (def newOut (str theOut "\\" nFolder "\\" theString "_"))
-        )
-      (def newOut (str theOut "\\" theString "_"))
-      )
-    (copy-file 
-      (str theIn "\\" x) 
-      (str newOut x)
-          )
-    (def theString "")
-    )
-  )
 
-(copy-image-with-format "C:\\Users\\vU\\Desktop\\TestImages" "C:\\Users\\vU\\Desktop\\TestImages" "Date/Time Model" "")
+
+;(copy-image-with-format "C:\\Users\\vU\\Desktop\\TestImages" "C:\\Users\\vU\\Desktop\\TestImages" "Date/Time Model" "")
 
