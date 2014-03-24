@@ -153,3 +153,107 @@
 (def pictureName (list-images path))
 (rename-file-by-tag pictureName "Date/Time")
 
+
+
+(if (and
+          (not (clojure.string/blank? tag))
+          (not (clojure.string/blank? in))
+          (not (clojure.string/blank? out)))
+      ((copy-file-by-tag theInput theOutput theTag))
+      ((println "Default operation: \n IN is ./ \n OUT is ./ \n TAG is Date/Time\n\nStart the default operation? (J/N)")
+        (def runDef (read-line))
+        (if (or (= runDef "j") (= runDef "J"))
+          (
+            (copy-file-by-tag theInput theOutput theTag)
+            (println "Job done!")
+            )
+          )
+        )
+      )  
+
+
+
+
+(println "Default operation: \n IN is ./ \n OUT is ./ \n TAG is Date/Time\n\nStart the default operation? (J/N)")
+        (def runDef (read-line))
+        (if (or (= runDef "j") (= runDef "J"))
+          (
+            (copy-file-by-tag theInput theOutput theTag)
+            (println "Job done!")
+            )
+          )
+        )
+        
+        
+        
+        
+        (defn- copy-file-by-tag
+  "Copy a bench of filenames by tag"
+  [inPath outPath tag]
+  (;BILDER LADEN!
+  (doseq [x (list-images inPath)]
+    (if (= tag "Date/Time") 
+      ;if the tag is "Date/Time", then grab the date and format it
+      (copy-file 
+        (str inPath x) 
+        (str outPath 
+             (create-new-date 
+               (split-the-date
+                 (exif-data (str inPath x) tag)
+                 )
+               )
+             "_" x)
+        ) 
+      ;if not the tag "Date/Time", so do copy it
+      (copy-file 
+        (str inPath x) 
+        (str outPath
+             (exif-data (str inPath x) tag)
+             "_" x)
+        )
+      )
+)))
+
+(defn- rename-file-by-tag
+  "Rename a bench of filenames by tag"
+  [inPath outPath tag]
+  (;BILDER LADEN!
+  (doseq [x (list-images inPath)]
+    (if (= tag "Date/Time") 
+      ;if the tag is "Date/Time", then grab the date and format it
+     (
+       (copy-file 
+         (str inPath x) 
+         (str outPath 
+              (create-new-date 
+                (split-the-date
+                  (exif-data (str inPath x) tag)
+                  )
+                )
+              "_" x)
+         )
+       (io/delete-file (str inPath x))
+       )
+      ;if not the tag "Date/Time", so do copy it
+      ((copy-file 
+        (str inPath x) 
+        (str outPath
+             (exif-data (str inPath x) tag)
+             "_" x)
+        )
+        (io/delete-file (str inPath x))
+        )
+      )
+    )))
+
+
+
+;(def string
+;  (str string
+;       (create-new-model
+;         (split-whitespace 
+;           (exif-data (str theIn "\\" x) t)
+;           )
+;         )
+;       )
+;  )

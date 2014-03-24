@@ -53,3 +53,10 @@
   "Rename old-path to new-path."
   [old-path new-path]
   (.renameTo (File. old-path) (File. new-path)))
+
+(defn rename-a-file
+  "Rename old-path to new-path"
+  [o n]
+  (.renameTo 
+ (File. (str (File/separator) o))
+ (File. (str (File/separator) n))))
