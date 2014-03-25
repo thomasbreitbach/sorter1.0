@@ -57,7 +57,7 @@
   
   ;(def tagList (split-whitespace tag)); only you come from repl
   ;(println tag)
-  
+  (if )
   (def theString "")
   (def res (list-images (str theIn)))
   (doseq [x res]
@@ -123,12 +123,12 @@
 ///////////////////////////////////////////////////////////////////////////////
 "
     [
-     [help       "Shows exactly this menu"]
-     [listtags?  "Lists all useful tags"]
-     [in         "This specifies the input directory to the pictures"]
-     [out        "This specifies the output directory for a new folder"]
-     [tag        "To sort and rename the pictures by given tag/s"]
-     [newFolder  "Create a subfolder in the output directory"]
+     [help      "Shows exactly this menu"]
+     [listtags? "Lists all useful tags" false]
+     [in        "This specifies the input directory to the pictures"]
+     [out       "This specifies the output directory for a new folder"]
+     [tag       "To sort and rename the pictures by given tag/s"]
+     [newFolder "Create a subfolder in the output directory"]
      extras]
     
     (if
@@ -157,7 +157,7 @@
     
     
     (if 
-      (java.lang.Boolean/valueOf listtags?) 
+       listtags? ;BUG!
       (mTags)
       (
         (println "\n\nThe script is running with these configuration:\n\nTAG: " theTag "\nIN:  " theInput "\nOUT: " theOutput "\n\n")
@@ -180,6 +180,35 @@
   )
 
 
+(defn ^File file-str
+  "Concatenates args as strings and returns a java.io.File.  Replaces
+  all / and \\ with File/separatorChar.  Replaces ~ at the start of
+  the path with the user.home system property."
+  [& args]
+  (let [^String s (apply str args)
+        s (.replace s \\ File/separatorChar)
+        s (.replace s \/ File/separatorChar)
+        s (if (.startsWith s "~")
+            (str (System/getProperty "user.home")
+                 File/separator (subs s 1))
+            s)]
+    (File. s)))
 
+(println file-str "./")
+
+(defn check-line-seperator[path]
+  (if 
+    (or (re-matches #".(\/).*" path) (re-matches #"(\/).*" path))
+    (str "UNIX FOUND::/")
+    (if 
+      (or (re-matches #"..(\\).*" path) (re-matches #"^(\\).*" path))
+      (str "WIN FOUND::\\")
+      )   
+    )   
+  )
+
+(println (check-line-seperator "C:\\"))
+(println (check-line-seperator "/USers/"))
+(println (check-line-seperator "./"))
 ;(copy-image-with-format "C:\\Users\\vU\\Desktop\\TestImages" "C:\\Users\\vU\\Desktop\\TestImages" "Date/Time Model" "")
 
