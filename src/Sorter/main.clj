@@ -75,6 +75,10 @@
     (if 
       (or (re-matches #"..(\\).*" path) (re-matches #"^(\\).*" path))
       (str "\\")
+      (if 
+        (re-matches #"." path)
+        (str "/")
+        )
       )   
     )   
   )
