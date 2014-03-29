@@ -10,7 +10,7 @@ Java-Lib:
 http://code.google.com/p/metadata-extractor/
 
 
-EXIF-Wrapper
+Exif-Wrapper
 ============
 
 ## Installation
