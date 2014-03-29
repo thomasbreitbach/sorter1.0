@@ -188,6 +188,7 @@
       (def newOut (str theOut (check-line-seperator theOut) nFolder (check-line-seperator theOut) theString "_"))
       (def newOut (str theOut (check-line-seperator theOut) theString "_"))
       )
+   
     (copy-file 
       (str theIn (check-line-seperator theIn) x) 
       (str newOut x)
@@ -202,7 +203,7 @@
     "
 ///////////////////////////////////////////////////////////////////////////////
 //                                                                           //
-//                              Fotosort 1.0                                 //
+//                              Photosort 1.0                                //
 //                                                                           //
 //                          by Thomas Breitbach                              //
 //                             Andre  Wissner                                //
@@ -222,7 +223,7 @@ Available useful Tags:
 "
     [
      [help      "Shows exactly this menu"]
-     [in        "This specifies the input directory to the pictures"]
+     [in        "This specifies the input directory for the pictures"]
      [out       "This specifies the output directory for a new folder"]
      [tag       "To sort and rename the pictures by given tag/s"]
      [newFolder "Create a subfolder in the output directory"]
