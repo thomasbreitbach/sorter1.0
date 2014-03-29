@@ -34,7 +34,7 @@
   (re-pattern (str "^(http|https):\\/\\/.*$")))
 
 (defn- url? 
-  "Checks string for url. Returs true if string starts with 'http://' oder 'https://'"
+  "Returns true if string starts with 'http://' oder 'https://'"
   [url]
   (if (nil? (re-find url-regex url))
     false
@@ -42,11 +42,9 @@
 
 
 (defn- extract-from-tag
-  "Extracts a Tag object into its key-value representation"
+  "Extracts a tag object into its key-value representation"
   [tag]
   (into {} (map #(hash-map (keyword (.getTagName %)) (.getDescription %)) tag)))
-
-
 
 
 ;-------------------------------------------------
@@ -181,7 +179,7 @@
           (if (instance? Directory tag-or-dir)
             (exif-for-url s tag-or-dir)
             (exif-tags-for-url s tag-or-dir)))
-        ;s isn't an url
+        ;s isn't an url -> check fs
         (if (instance? String tag-or-dir)
           (exif-tag-for-filename s tag-or-dir)
           (if (instance? Directory tag-or-dir)
