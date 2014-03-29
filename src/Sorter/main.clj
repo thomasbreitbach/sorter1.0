@@ -1,7 +1,8 @@
 (ns Sorter.main 
   (:gen-class)
   (:require [clojure.contrib.command-line :as ccl])
-  (:require [clojure.java.io :as io]))
+  (:require [clojure.java.io :as io])
+  (:require [clojure.contrib.java-utils]))
 
 (import '(java.io File))
 
@@ -117,18 +118,17 @@
   [theIn theOut tag nFolder]  
   
   ;(def tagList (split-whitespace tag)); only you come from repl
-  ;(println tag)
-  ;ERST ORDNER ANLEGEN DANN EXIF LESEN UND KOPIEREN
-  
-  (if (not (clojure.string/blank? nFolder))
-      (if (.mkdir (new File (str theOut (check-line-seperator theIn) nFolder)))
-        (println "\n\nFolder created!\n\n")
-        (println "\n\nFolder " nFolder " found!\n\n")
-        )
-      )
-  
+ ;(println tag)
+ (if (not (clojure.string/blank? nFolder))
+   (if (.mkdir (new File (str theOut (check-line-seperator theOut) nFolder)))
+     (println "New folder created: " nFolder) 
+     (println "Folder already exists!")
+     )
+   )
+ 
   (def theString "")
   (def res (list-images (str theIn)))
+  
   (doseq [x res]
     (doseq [t tag]
       (if (= t "Date/Time")
@@ -153,25 +153,41 @@
                      (split-whitespace 
                        (exif-data (str theIn (check-line-seperator theIn) x) t)
                        ))))
-            (def theString 
-               (str theString
-                   (exif-data (str theIn (check-line-seperator theIn) x) t)
-                   ))
+            
+            (if (= t "Width")
+              (def theString
+                (str theString
+                     (create-new-model
+                       (split-whitespace 
+                         (exif-data (str theIn (check-line-seperator theIn) x) "Image Width")
+                         ))))
+              
+              (if (= t "Height")
+                (def theString
+                  (str theString
+                       (create-new-model
+                         (split-whitespace 
+                           (exif-data (str theIn (check-line-seperator theIn) x) "Image Height")
+                           ))))
+                
+                (def theString 
+                  (str theString
+                       (exif-data (str theIn (check-line-seperator theIn) x) t)
+                       ))
+                )
+              )
             )
           )
         )
       );EOF DOSEQ
     (if (not (clojure.string/blank? nFolder))
-      (copy-file 
-        (str theIn (check-line-seperator theIn) x)
-        (str (str theOut (check-line-seperator theIn) nFolder (check-line-seperator theIn) theString "_") x)
-        )
-      (copy-file 
-        (str theIn (check-line-seperator theIn) x)
-        (str (str theOut (check-line-seperator theIn) theString "_") x)
-        )
+      (def newOut (str theOut (check-line-seperator theOut) nFolder (check-line-seperator theOut) theString "_"))
+      (def newOut (str theOut (check-line-seperator theOut) theString "_"))
       )
-
+    (copy-file 
+      (str theIn (check-line-seperator theIn) x) 
+      (str newOut x)
+      )
     (def theString "")
     )
   (println "Job done!")
@@ -190,10 +206,18 @@
 //                 https://github.com/andrewissner/sorter1.0                 //
 //                                                                           //
 ///////////////////////////////////////////////////////////////////////////////
+
+Available useful Tags:
+
+  Date/Time - Get the date and time from the metadata
+  Model     - Get the model and the make of the camera
+  Make      - Get the camera make
+  Width     - Get the image width
+  Height    - Get the image height
+
 "
     [
      [help      "Shows exactly this menu"]
-     [listtags? "Lists all useful tags" false]
      [in        "This specifies the input directory to the pictures"]
      [out       "This specifies the output directory for a new folder"]
      [tag       "To sort and rename the pictures by given tag/s"]
@@ -221,16 +245,16 @@
     (if
       (not (clojure.string/blank? tag))
       (def theTag (split-whitespace tag))
-      (def theTag "Date/Time")
+      (def theTag ["Date/Time"])
       )
     
-   (println "\n\nThe script is running with these configuration:\n\nTAG: " theTag "\nIN:  " theInput "\nOUT: " theOutput "\n\n")
-   (println "Run this configuration? (J/N)")
-   (let [input (clojure.string/lower-case(read-line))]
+    (println "\n\nThe script is running with these configuration:\n\nTAG: " theTag "\nIN:  " theInput "\nOUT: " theOutput "\n\n")
+    (println "Run this configuration? (J/N)")
+    (let [input (clojure.string/lower-case(read-line))]
       (if (= input "j")
         (copy-image-with-format  theInput theOutput theTag theNewFolder)        
         (println "Nothing to do here!")
-       )
-     )
+        )
+      )
     )
   )
