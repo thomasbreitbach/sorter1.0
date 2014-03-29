@@ -1,4 +1,4 @@
-(ns Sorter.readDir
+(ns Sorter.fsOperations
   ^{:doc "what is this ns about? todo: insert description"
     :author "Thomas Breitbach & André Wißner"}
   (:use [clojure.string :only [join]])
@@ -49,14 +49,37 @@
   [dir]
   (filter #(re-find img-regex  %) (list-filenames dir)))
   
-(defn rename-file
+
+;#####################################################################################################################
+;#####################################################################################################################
+;The code below comes form 
+;https://bitbucket.org/tebeka/fs/src/9a5476217d7101b1e20bf62866e8c4f368175ba1/src/fs.clj?at=default#cl-49
+;#####################################################################################################################
+;#####################################################################################################################
+
+
+(def ^:dynamic *cwd* (.getCanonicalPath (io/as-file ".")))
+
+(defn- as-file [path]
+  "The challenge is to work nicely with *cwd*"
+  (cond
+   (instance? File path) path
+   (= path "") (io/as-file "")
+   (= path ".") (io/as-file *cwd*)
+   :else
+   (let [ try (new File path) ]
+         (if (.isAbsolute try)
+           try
+           (new File *cwd* path)))))
+
+(defn- rename-file
   "Rename old-path to new-path."
   [old-path new-path]
-  (.renameTo (File. old-path) (File. new-path)))
+  (.renameTo (as-file old-path) (as-file new-path)))
 
-(defn rename-a-file
-  "Rename old-path to new-path"
-  [o n]
-  (.renameTo 
- (File. (str (File/separator) o))
- (File. (str (File/separator) n))))
+(defn- delete-file
+  "Delete path. Returns path."
+  [path]
+  (.delete (as-file path))
+  path)
+

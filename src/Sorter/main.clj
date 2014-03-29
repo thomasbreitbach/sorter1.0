@@ -8,14 +8,75 @@
 (use '[clojure.string :only (join split)])
 (use 'Sorter.gui)
 (use 'Sorter.messanges)
-(use 'Sorter.readDir)
+(use 'Sorter.fsOperations)
 (use 'Sorter.exif)
 
-(defn- get-root-path
-  "Get the root path of the jar file"
-  [& [ns]]
-  (-> (or ns (class *ns*))
-    .getProtectionDomain .getCodeSource .getLocation .getPath))
+
+;#####################################################################################################################
+;#####################################################################################################################
+;The code below comes form 
+;https://bitbucket.org/tebeka/fs/src/9a5476217d7101b1e20bf62866e8c4f368175ba1/src/fs.clj?at=default#cl-49
+;#####################################################################################################################
+;#####################################################################################################################
+
+
+(defn- as-file [path]
+  "The challenge is to work nicely with *cwd*"
+  (cond
+   (instance? File path) path
+   (= path "") (io/as-file "")
+   (= path ".") (io/as-file *cwd*)
+   :else
+   (let [ try (new File path) ]
+         (if (.isAbsolute try)
+           try
+           (new File *cwd* path)))))
+
+(defn- rename-file
+  "Rename old-path to new-path."
+  [old-path new-path]
+  (.renameTo (as-file old-path) (as-file new-path)))
+
+(defn- delete-file
+  "Delete path. Returns path."
+  [path]
+  (.delete (as-file path))
+  path)
+;#####################################################################################################################
+;#####################################################################################################################
+(defn ^File file-str
+  "Concatenates args as strings and returns a java.io.File.  Replaces
+  all / and \\ with File/separatorChar.  Replaces ~ at the start of
+  the path with the user.home system property."
+  [& args]
+  (let [^String s (apply str args)
+        s (.replace s \\ File/separatorChar)
+        s (.replace s \/ File/separatorChar)
+        s (if (.startsWith s "~")
+            (str (System/getProperty "user.home")
+                 File/separator (subs s 1))
+            s)]
+    (File. s)))
+
+(defn delete-files 
+  "Delete files"
+  [in files]
+  (doseq [x files]
+    (println (delete-file (str (file-str in "\\" x)))) 
+    )
+  )
+
+
+(defn- check-line-seperator[path]
+  (if 
+    (or (re-matches #".(\/).*" path) (re-matches #"(\/).*" path))
+    (str "/")
+    (if 
+      (or (re-matches #"..(\\).*" path) (re-matches #"^(\\).*" path))
+      (str "\\")
+      )   
+    )   
+  )
 
 (defn- split-the-date 
   "Split the date/time from tag to a vector"
@@ -57,7 +118,15 @@
   
   ;(def tagList (split-whitespace tag)); only you come from repl
   ;(println tag)
-  (if )
+  ;ERST ORDNER ANLEGEN DANN EXIF LESEN UND KOPIEREN
+  
+  (if (not (clojure.string/blank? nFolder))
+      (if (.mkdir (new File (str theOut (check-line-seperator theIn) nFolder)))
+        (println "\n\nFolder created!\n\n")
+        (println "\n\nFolder " nFolder " found!\n\n")
+        )
+      )
+  
   (def theString "")
   (def res (list-images (str theIn)))
   (doseq [x res]
@@ -66,7 +135,7 @@
         (def theString 
           (str theString
                (create-new-date
-                 (split-the-date (exif-data (str theIn "\\" x) t))
+                 (split-the-date (exif-data (str theIn (check-line-seperator theIn) x) t))
                  )))
         
         (if (= t "Model")
@@ -74,7 +143,7 @@
             (str theString 
                  (create-new-model
                    (split-whitespace 
-                     (exif-data (str theIn "\\" x) t)
+                     (exif-data (str theIn (check-line-seperator theIn) x) t)
                      ))))
           
           (if (= t "Make")
@@ -82,31 +151,31 @@
               (str theString
                    (create-new-model
                      (split-whitespace 
-                       (exif-data (str theIn "\\" x) t)
+                       (exif-data (str theIn (check-line-seperator theIn) x) t)
                        ))))
             (def theString 
                (str theString
-                   (exif-data (str theIn "\\" x) t)
+                   (exif-data (str theIn (check-line-seperator theIn) x) t)
                    ))
             )
           )
         )
       );EOF DOSEQ
-  (if (not (clojure.string/blank? nFolder))
-      (if (.mkdir (new File (str theOut "\\" nFolder)))
-        (println "New folder created: " nFolder) 
-        (def newOut (str theOut "\\" nFolder "\\" theString "_"))
+    (if (not (clojure.string/blank? nFolder))
+      (copy-file 
+        (str theIn (check-line-seperator theIn) x)
+        (str (str theOut (check-line-seperator theIn) nFolder (check-line-seperator theIn) theString "_") x)
         )
-      (def newOut (str theOut "\\" theString "_"))
+      (copy-file 
+        (str theIn (check-line-seperator theIn) x)
+        (str (str theOut (check-line-seperator theIn) theString "_") x)
+        )
       )
-    (copy-file 
-      (str theIn "\\" x) 
-      (str newOut x)
-          )
+
     (def theString "")
     )
+  (println "Job done!")
   )
-
 
 (defn -main [& args]
   (ccl/with-command-line args
@@ -155,60 +224,13 @@
       (def theTag "Date/Time")
       )
     
-    
-    (if 
-       listtags? ;BUG!
-      (mTags)
-      (
-        (println "\n\nThe script is running with these configuration:\n\nTAG: " theTag "\nIN:  " theInput "\nOUT: " theOutput "\n\n")
-        (println "Run this configuration? (J/N)")
-        (def readCmd (clojure.string/lower-case (read-line)))
-        (if (= readCmd "j")
-          (
-            (if (= theInput theOutput)
-              (copy-image-with-format  theInput theOutput theTag theNewFolder)
-              (copy-image-with-format  theInput theOutput theTag theNewFolder)
-              )
-            (println "Job done!")
-            )
-          (println "Nothing to do here!")
-          )
-        )
-      )
-    
+   (println "\n\nThe script is running with these configuration:\n\nTAG: " theTag "\nIN:  " theInput "\nOUT: " theOutput "\n\n")
+   (println "Run this configuration? (J/N)")
+   (let [input (clojure.string/lower-case(read-line))]
+      (if (= input "j")
+        (copy-image-with-format  theInput theOutput theTag theNewFolder)        
+        (println "Nothing to do here!")
+       )
+     )
     )
   )
-
-
-(defn ^File file-str
-  "Concatenates args as strings and returns a java.io.File.  Replaces
-  all / and \\ with File/separatorChar.  Replaces ~ at the start of
-  the path with the user.home system property."
-  [& args]
-  (let [^String s (apply str args)
-        s (.replace s \\ File/separatorChar)
-        s (.replace s \/ File/separatorChar)
-        s (if (.startsWith s "~")
-            (str (System/getProperty "user.home")
-                 File/separator (subs s 1))
-            s)]
-    (File. s)))
-
-(println file-str "./")
-
-(defn check-line-seperator[path]
-  (if 
-    (or (re-matches #".(\/).*" path) (re-matches #"(\/).*" path))
-    (str "UNIX FOUND::/")
-    (if 
-      (or (re-matches #"..(\\).*" path) (re-matches #"^(\\).*" path))
-      (str "WIN FOUND::\\")
-      )   
-    )   
-  )
-
-(println (check-line-seperator "C:\\"))
-(println (check-line-seperator "/USers/"))
-(println (check-line-seperator "./"))
-;(copy-image-with-format "C:\\Users\\vU\\Desktop\\TestImages" "C:\\Users\\vU\\Desktop\\TestImages" "Date/Time Model" "")
-

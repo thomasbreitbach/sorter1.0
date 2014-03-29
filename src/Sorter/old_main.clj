@@ -257,3 +257,16 @@
 ;         )
 ;       )
 ;  )
+
+(if (not (clojure.string/blank? nFolder))
+      (if (.mkdir (new File (str theOut (check-line-seperator theIn) nFolder)))
+        ((println "New folder created: " nFolder) 
+          (def newOut (str theOut (check-line-seperator theIn) nFolder (check-line-seperator theIn) theString "_"))
+          (copy-file 
+            (str theIn (check-line-seperator theIn) x)
+            (str newOut x)
+            )
+          )
+        )
+      (def newOut (str theOut (check-line-seperator theIn) theString "_"))
+      )
