@@ -24,11 +24,14 @@ Die Normal-JAR hingegen kann verschiedene Parameter entegennehmen:
 --tag “”     Legt fest, welche Tags verwendet werden sollen.
              “Date/Time | Model | Make | Width | Height “
 --newFolder  Gibt einen neuen Ordner an, in dem die Bilder gespeichert werden
-
 ```
 Werden keine Parameter angeben, läuft die Normal-JAR mit der Standardkonfiguration "DATE/TIME".
 
-###Beispiele
+###Beispiel
+```bash
+$ java -jar Photosorter-normal.jar --in “home/user/bilder” --out
+“/media/Data/bilder/sorted” --tag “Date/Time”
+```
 
 
 Exif-Wrapper
