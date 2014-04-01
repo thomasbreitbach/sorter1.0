@@ -28,9 +28,15 @@ Die Normal-JAR hingegen kann verschiedene Parameter entegennehmen:
 Werden keine Parameter angeben, läuft die Normal-JAR mit der Standardkonfiguration "DATE/TIME".
 
 ###Beispiel
+Ein Paramter:
 ```bash
 $ java -jar Photosorter-normal.jar --in “home/user/bilder” --out
 “/media/Data/bilder/sorted” --tag “Date/Time”
+```
+Mehrere Parameter:
+```bash
+$ java -jar Photosorter-normal.jar --in “home/user/bilder” --out
+“/media/Data/bilder/sorted” --tag “Date/Time Make”
 ```
 
 
