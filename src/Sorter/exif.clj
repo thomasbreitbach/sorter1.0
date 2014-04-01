@@ -44,7 +44,7 @@
 (defn- extract-from-tag
   "Extracts a tag object into its key-value representation"
   [tag]
-  (into {} (map #(hash-map (keyword (.getTagName %)) (.getDescription %)) tag)))
+(into {} (map #(hash-map (keyword (.getTagName %)) (.getDescription %)) tag)))
 
 
 ;-------------------------------------------------

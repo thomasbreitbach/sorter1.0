@@ -193,6 +193,7 @@
       (str theIn (check-line-seperator theIn) x) 
       (str newOut x)
       )
+    ;(println (delete-file (str theIn x)))
     (def theString "")
     )
   (println "Job done!")
@@ -253,7 +254,7 @@ Available useful Tags:
       (def theTag ["Date/Time"])
       )
     
-    (println "\n\nThe script is running with these configuration:\n\nTAG: " theTag "\nIN:  " theInput "\nOUT: " theOutput "\n\n")
+    (println "\n\nThe script is running with these configuration:\n\nTAG: " theTag "\nIN:  " theInput "\nOUT: " theOutput "\nNew Folder: " theNewFolder "\n\n")
     (println "Run this configuration? (J/N)")
     (let [input (clojure.string/lower-case(read-line))]
       (if (= input "j")
