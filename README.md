@@ -1,17 +1,48 @@
-Photsorter
-==========
+Photosorter
+===========
 
 Dies ist das Repository zur Masterveranstaltung "Programmieren in Clojure" an der Technischen Hochschule Mittelhessen.
-Als Projektarbeit soll ein in Clojure geschriebener Fotosortierer geschrieben werden, der es ermöglicht alle Fotos eines Ordners anhand der EXIF-Metadaten chronologisch zu sortieren.
+Als Projektarbeit soll ein in Clojure geschriebener Fotosortierer geschrieben werden, der es ermöglicht alle Fotos eines Ordners anhand der Exif-Metadaten chronologisch zu sortieren.
 Dies ist vorallem sehr hilfreich, wenn man mit verschiedenen Kameras Urlaubfotos macht und diese nach den schönen Tagen in zeitlich korrekter Reihenfolge ansehen möchte.
 
 
 Java-Lib:
 http://code.google.com/p/metadata-extractor/
 
+## Verwendung
+Im Ordner [Stable Project](https://github.com/andrewissner/sorter1.0/tree/master/Stable%20Project) exisieren zwei ausführbare JAR-Dateien:
+* Photosorter-easy.jar
+* Photosorter-normal.jar
+ 
+Die Easy-JAR kann durch einen Doppelklick ausgeführ werden und sortiert die Fotos im aktuellen Ordner nach Aufnahmedatum und -uhrzeit. Parameter sind bei dieser Variante nicht möglich.
+
+Die Normal-JAR hingegen kann verschiedene Parameter entegennehmen:
+```bash
+--help       Ruft das Hilfemenü auf
+--in “”      Gibt an, von welcehm Ort die Bilder eingelesen werden sollen
+--out “”     Gibt den Ausgabeort der Bilder an
+--tag “”     Legt fest, welche Tags verwendet werden sollen.
+             “Date/Time | Model | Make | Width | Height “
+--newFolder  Gibt einen neuen Ordner an, in dem die Bilder gespeichert werden
+```
+Werden keine Parameter angeben, läuft die Normal-JAR mit der Standardkonfiguration "DATE/TIME".
+
+###Beispiel
+Ein Paramter:
+```bash
+$ java -jar Photosorter-normal.jar --in “home/user/bilder” --out
+“/media/Data/bilder/sorted” --tag “Date/Time”
+```
+Mehrere Parameter:
+```bash
+$ java -jar Photosorter-normal.jar --in “home/user/bilder” --out
+“/media/Data/bilder/sorted” --tag “Date/Time Make”
+```
+
 
 Exif-Wrapper
 ============
+Der [Exif-Wrapper](https://github.com/andrewissner/sorter1.0/blob/master/src/Sorter/exif.clj) stellt eine komfortable Möglichkeit zur Verfügung, um auf die von Drew Noakes erstellte Bibliothek [metadata-extractor](https://code.google.com/p/metadata-extractor/) in Clojure zuzugreifen.
 
 ## Installation
 Leider ist die aktuelle Version des Repos noch nicht als Maven-Repo verfügbar, was allerdings für Leiningen vorausgesetzt wird. Aus diesem Grund muss der 2.7er Branch des meta-extractor Repositoies geklont und als lokales Maven-Repository installiert werden:
@@ -36,6 +67,7 @@ Es folgen einige Beispielaufrufe. Der Wrapper wurde mithilfe von 'Protocols' umg
 Wobei param1 ein Bild sein muss. Param2 ist optional und dient als Filter der Exif-Daten.
 
 #### String
+Der angebene String muss entweder ein Pfad zu einem lokal gespeicherten Bild oder eine URL (beginnend mit "http://" oder "https://") zu eine Bild im Netz sein.
 ```bash
 (exif-data "pfad/zum/bild/bild.jpg")
 
