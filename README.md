@@ -14,7 +14,7 @@ Im Ordner [Stable Project](https://github.com/andrewissner/sorter1.0/tree/master
 * Photosorter-easy.jar
 * Photosorter-normal.jar
  
-Die Easy-JAR kann durch einen Doppelklick ausgeführ werden und sortiert die Fotos im aktuellen Ordner nach Aufnahmedatum und -uhrzet. Parameter sind bei dieser Variante nicht möglich.
+Die Easy-JAR kann durch einen Doppelklick ausgeführ werden und sortiert die Fotos im aktuellen Ordner nach Aufnahmedatum und -uhrzeit. Parameter sind bei dieser Variante nicht möglich.
 
 Die Normal-JAR hingegen kann verschiedene Parameter entegennehmen:
 ```bash
