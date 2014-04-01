@@ -28,6 +28,8 @@ Die Normal-JAR hingegen kann verschiedene Parameter entegennehmen:
 ```
 Werden keine Parameter angeben, läuft die Normal-JAR mit der Standardkonfiguration "DATE/TIME".
 
+###Beispiele
+
 
 Exif-Wrapper
 ============
