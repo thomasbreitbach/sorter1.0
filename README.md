@@ -2,12 +2,31 @@ Photsorter
 ==========
 
 Dies ist das Repository zur Masterveranstaltung "Programmieren in Clojure" an der Technischen Hochschule Mittelhessen.
-Als Projektarbeit soll ein in Clojure geschriebener Fotosortierer geschrieben werden, der es ermöglicht alle Fotos eines Ordners anhand der EXIF-Metadaten chronologisch zu sortieren.
+Als Projektarbeit soll ein in Clojure geschriebener Fotosortierer geschrieben werden, der es ermöglicht alle Fotos eines Ordners anhand der Exif-Metadaten chronologisch zu sortieren.
 Dies ist vorallem sehr hilfreich, wenn man mit verschiedenen Kameras Urlaubfotos macht und diese nach den schönen Tagen in zeitlich korrekter Reihenfolge ansehen möchte.
 
 
 Java-Lib:
 http://code.google.com/p/metadata-extractor/
+
+## Verwendung
+Im Ordner [Stable Project](https://github.com/andrewissner/sorter1.0/tree/master/Stable%20Project) exisieren zwei ausführbare JAR-Dateien:
+* Photosorter-easy.jar
+* Photosorter-normal.jar
+ 
+Die Easy-JAR kann durch einen Doppelklick ausgeführ werden und sortiert die Fotos im aktuellen Ordner nach Aufnahmedatum und -uhrzet. Parameter sind bei dieser Variante nicht möglich.
+
+Die Normal-JAR hingegen kann verschiedene Parameter entegennehmen:
+```bash
+--help       Ruft das Hilfemenü auf
+--in “”      Gibt an, von welcehm Ort die Bilder eingelesen werden sollen
+--out “”     Gibt den Ausgabeort der Bilder an
+--tag “”     Legt fest, welche Tags verwendet werden sollen.
+“Date/Time | Model | Make | Width | Height “
+--newFolder  Gibt einen neuen Ordner an, in dem die Bilder gespeichert werden
+
+```
+Werden keine Parameter angeben, läuft die Normal-JAR mit der Standardkonfiguration "DATE/TIME".
 
 
 Exif-Wrapper
