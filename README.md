@@ -37,6 +37,7 @@ Es folgen einige Beispielaufrufe. Der Wrapper wurde mithilfe von 'Protocols' umg
 Wobei param1 ein Bild sein muss. Param2 ist optional und dient als Filter der Exif-Daten.
 
 #### String
+Der angebene String muss entweder ein Pfad zu einem lokal gespeicherten Bild oder eine URL (beginnend mit "http://" oder "https://") zu eine Bild im Netz sein.
 ```bash
 (exif-data "pfad/zum/bild/bild.jpg")
 
