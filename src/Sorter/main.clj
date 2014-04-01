@@ -78,6 +78,10 @@
       (if 
         (re-matches #"." path)
         (str "/")
+        (if 
+        (re-matches #"../" path)
+        (str "/")
+        )
         )
       )   
     )   
@@ -185,15 +189,15 @@
         )
       );EOF DOSEQ
     (if (not (clojure.string/blank? nFolder))
-      (def newOut (str theOut (check-line-seperator theOut) nFolder (check-line-seperator theOut) theString "_"))
-      (def newOut (str theOut (check-line-seperator theOut) theString "_"))
+      (def newOut (str theOut nFolder (check-line-seperator theOut) theString "_"))
+      (def newOut (str theOut theString "_"))
       )
-   
+    
     (copy-file 
       (str theIn (check-line-seperator theIn) x) 
       (str newOut x)
       )
-    ;(println (delete-file (str theIn x)))
+
     (def theString "")
     )
   (println "Job done!")
