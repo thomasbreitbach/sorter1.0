@@ -1,4 +1,4 @@
-Sorter1.0
+Photsort
 =========
 
 Dies ist das Repo zur Masterveranstaltung "Programmieren in Clojure" an der Technischen Hochschule Mittelhessen.
