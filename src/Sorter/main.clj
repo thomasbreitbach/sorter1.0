@@ -257,9 +257,13 @@ Available useful Tags:
       (def theTag ["Date/Time"])
       )
     
-
+    (println "\n\nThe script is running with these configuration:\n\nTAG: " theTag "\nIN:  " theInput "\nOUT: " theOutput "\nNew Folder: " theNewFolder "\n\n")
+    (println "Run this configuration? (J/N)")
+    (let [input (clojure.string/lower-case(read-line))]
+      (if (= input "j")
         (copy-image-with-format  theInput theOutput theTag theNewFolder)        
         (println "Nothing to do here!")
-
+        )
+      )
     )
   )
