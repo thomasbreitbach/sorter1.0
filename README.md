@@ -1,5 +1,5 @@
-Photsorter
-==========
+Photosorter
+===========
 
 Dies ist das Repository zur Masterveranstaltung "Programmieren in Clojure" an der Technischen Hochschule Mittelhessen.
 Als Projektarbeit soll ein in Clojure geschriebener Fotosortierer geschrieben werden, der es ermöglicht alle Fotos eines Ordners anhand der Exif-Metadaten chronologisch zu sortieren.
@@ -22,7 +22,7 @@ Die Normal-JAR hingegen kann verschiedene Parameter entegennehmen:
 --in “”      Gibt an, von welcehm Ort die Bilder eingelesen werden sollen
 --out “”     Gibt den Ausgabeort der Bilder an
 --tag “”     Legt fest, welche Tags verwendet werden sollen.
-“Date/Time | Model | Make | Width | Height “
+             “Date/Time | Model | Make | Width | Height “
 --newFolder  Gibt einen neuen Ordner an, in dem die Bilder gespeichert werden
 
 ```
