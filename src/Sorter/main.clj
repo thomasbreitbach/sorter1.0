@@ -7,7 +7,6 @@
 (import '(java.io File))
 
 (use '[clojure.string :only (join split)])
-(use 'Sorter.gui)
 (use 'Sorter.messanges)
 (use 'Sorter.fsOperations)
 (use 'Sorter.exif)
@@ -143,7 +142,7 @@
         (def theString 
           (str theString
                (create-new-date
-                 (split-the-date (exif-data (str theIn (check-line-seperator theIn) x) t))
+                 (split-the-date (exif-data (str theIn (check-line-seperator theIn) x) "Date/Time Original"))
                  )))
         
         (if (= t "Model")
@@ -258,13 +257,9 @@ Available useful Tags:
       (def theTag ["Date/Time"])
       )
     
-    (println "\n\nThe script is running with these configuration:\n\nTAG: " theTag "\nIN:  " theInput "\nOUT: " theOutput "\nNew Folder: " theNewFolder "\n\n")
-    (println "Run this configuration? (J/N)")
-    (let [input (clojure.string/lower-case(read-line))]
-      (if (= input "j")
+
         (copy-image-with-format  theInput theOutput theTag theNewFolder)        
         (println "Nothing to do here!")
-        )
-      )
+
     )
   )
