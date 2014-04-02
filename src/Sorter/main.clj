@@ -141,40 +141,53 @@
       (if (= t "Date/Time")
         (def theString 
           (str theString
-               (create-new-date
-                 (split-the-date (exif-data (str theIn (check-line-seperator theIn) x) "Date/Time Original"))
+               (let [date (exif-data (str theIn (check-line-seperator theIn) x) "Date/Time Original")] 
+                 (if 
+                   (not 
+                     (nil? date)
+                     )
+                   (create-new-date
+                     (split-the-date date)))
                  )))
         
         (if (= t "Model")
           (def theString
             (str theString 
-                 (create-new-model
-                   (split-whitespace 
-                     (exif-data (str theIn (check-line-seperator theIn) x) t)
-                     ))))
+                 (let [model (exif-data (str theIn (check-line-seperator theIn) x) t)]
+                   (if 
+                     (not (nil? model))
+                     (create-new-model
+                       (split-whitespace model)
+                       )))))
           
           (if (= t "Make")
             (def theString
               (str theString
-                   (create-new-model
-                     (split-whitespace 
-                       (exif-data (str theIn (check-line-seperator theIn) x) t)
+                   (let [make (exif-data (str theIn (check-line-seperator theIn) x) t)]
+                     (if 
+                       (not (nil? make))
+                       (create-new-model
+                         (split-whitespace make))           
                        ))))
             
             (if (= t "Width")
               (def theString
                 (str theString
-                     (create-new-model
-                       (split-whitespace 
-                         (exif-data (str theIn (check-line-seperator theIn) x) "Image Width")
+                     (let [width (exif-data (str theIn (check-line-seperator theIn) x) "Image Width")]
+                       (if 
+                         (not (nil? width))
+                         (create-new-model
+                           (split-whitespace width))           
                          ))))
               
               (if (= t "Height")
                 (def theString
                   (str theString
-                       (create-new-model
-                         (split-whitespace 
-                           (exif-data (str theIn (check-line-seperator theIn) x) "Image Height")
+                       (let [height (exif-data (str theIn (check-line-seperator theIn) x) "Image Height")]
+                         (if 
+                           (not (nil? height))
+                           (create-new-model
+                             (split-whitespace height))           
                            ))))
                 
                 (def theString 
