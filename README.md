@@ -10,7 +10,7 @@ Java-Lib:
 http://code.google.com/p/metadata-extractor/
 
 ## Verwendung
-Im Ordner [Stable Project](https://github.com/andrewissner/sorter1.0/tree/master/Stable%20Project) exisieren zwei ausführbare JAR-Dateien:
+Im Ordner [Stable Project](https://github.com/andrewissner/sorter1.0/tree/master/Stable%20Project) existieren zwei ausführbare JAR-Dateien:
 * Photosorter-easy.jar
 * Photosorter-normal.jar
  
