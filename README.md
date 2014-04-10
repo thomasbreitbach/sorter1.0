@@ -45,7 +45,7 @@ Exif-Wrapper
 Der [Exif-Wrapper](https://github.com/andrewissner/sorter1.0/blob/master/src/Sorter/exif.clj) stellt eine komfortable Möglichkeit zur Verfügung, um auf die von Drew Noakes erstellte Bibliothek [metadata-extractor](https://code.google.com/p/metadata-extractor/) in Clojure zuzugreifen.
 
 ## Installation
-Leider ist die aktuelle Version des Repos noch nicht als Maven-Repo verfügbar, was allerdings für Leiningen vorausgesetzt wird. Aus diesem Grund muss der 2.7er Branch des meta-extractor Repositoies geklont und als lokales Maven-Repository installiert werden:
+Leider ist die aktuelle Version des Repos noch nicht als Maven-Repo verfügbar, was allerdings für Leiningen vorausgesetzt wird. Aus diesem Grund muss der 2.7er Branch des meta-extractor Repositories geklont und als lokales Maven-Repository installiert werden:
 ```bash
 $ git clone https://code.google.com/p/metadata-extractor/
 $ cd metadata-extractor
